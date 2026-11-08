@@ -474,6 +474,7 @@ onBeforeUnmount(() => {
   gap: 0.75rem; /* Léger espacement équilibré entre boutons et somme */
   flex: 0 0 auto;
   padding: 0;
+  margin-right: 0.65rem; /* Léger margin right aux boutons et somme totale */
 }
 
 .topbar-controls {
@@ -868,6 +869,7 @@ body.dark .loading-spinner-icon,
 
   .stats-controls-side {
     gap: 0.6rem;
+    margin-right: 0.55rem;
   }
 
   .total-compact-box {
@@ -933,6 +935,7 @@ body.dark .loading-spinner-icon,
     flex: 0 0 auto;
     min-width: 0;
     padding: 0;
+    margin-right: 0.5rem; /* Léger margin right aux boutons et somme totale en mobile */
   }
 
   .topbar-controls {

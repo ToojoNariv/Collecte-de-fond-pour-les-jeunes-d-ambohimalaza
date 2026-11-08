@@ -645,7 +645,7 @@ body.dark .row-index-badge,
   border-radius: 15px;
   border: none !important;
   padding: 1.15rem 1.25rem 0.75rem; /* Padding top augmenté */
-  margin-top: 2vh;
+  margin-top: 1vh;
   transition: background-color 0.2s ease;
 }
 

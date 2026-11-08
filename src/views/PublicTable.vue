@@ -1,8 +1,8 @@
 <template>
   <div class="clean-page-container">
-    <!-- 1. En-tête : Logo GÉANT à gauche qui prend tout le header jusqu'en haut, Contrôles & Somme compacte à droite -->
+    <!-- 1. En-tête : Logo GÉANT à gauche, Contrôles en haut à droite, et Somme totale augmentée à droite -->
     <header class="hero-top-header">
-      <!-- Colonne Gauche : Logo qui s'étend jusqu'au sommet du header -->
+      <!-- Colonne Gauche : Logo tout à gauche -->
       <div class="logo-hero-side">
         <img 
           :src="logoSvg" 
@@ -12,11 +12,10 @@
         />
       </div>
 
-      <!-- Colonne Droite : Contrôles (Thème & Langue) en haut, Somme totale en dessous -->
+      <!-- Colonne Droite : Contrôles (Thème & Langue) en haut, Somme totale augmentée en dessous -->
       <div class="stats-controls-side">
         <!-- Contrôles Thème & Langue au sommet à droite -->
         <div class="topbar-controls">
-          <!-- Bouton Thème Jour / Nuit (Noir en clair, gris en dark) -->
           <button 
             @click="toggleTheme" 
             class="ctrl-btn theme-btn" 
@@ -24,12 +23,10 @@
           >
             <i :class="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"></i>
           </button>
-
-          <!-- Sélecteur de langue avec drapeaux GIF (style ShiftUp) -->
           <LangSwitcher />
         </div>
 
-        <!-- Somme totale compacte (non agrandie, proportionnelle et nette) -->
+        <!-- Somme totale : Taille augmentée et mise en valeur -->
         <div class="total-compact-box">
           <span class="total-label">{{ $t('total_collected') }}</span>
           <h1 
@@ -42,7 +39,7 @@
       </div>
     </header>
 
-    <!-- 2. Barre de recherche : sans fond, animation label flottant au focus/saisie, texte net et grand -->
+    <!-- 2. Barre de recherche : sans fond, animation label flottant au focus/saisie -->
     <div class="search-div-transparent">
       <FloatLabel 
         variant="in" 
@@ -70,16 +67,17 @@
       </button>
     </div>
 
-    <!-- 3. Tableau DataTable avec scroll vertical (hauteur fixe), entièrement responsive -->
+    <!-- 3. Tableau DataTable : s'adapte à l'espace restant (flex) avec scroll vertical interne -->
     <div class="table-wrapper">
       <DataTable 
         :value="filteredProducts" 
-        tableStyle="min-width: 32rem"
+        tableStyle="min-width: 30rem"
         scrollable 
-        scrollHeight="500px"
+        scrollHeight="flex"
         responsiveLayout="scroll"
         :loading="loading"
         stripedRows
+        class="p-datatable-flex-scroll"
       >
         <template #empty>
           <div class="empty-state">
@@ -101,7 +99,7 @@
           </div>
         </template>
 
-        <!-- Colonnes : Nom, Prénom, Contact, Somme en Ar -->
+        <!-- Colonnes : Nom, Prénom (ou 'Prénom anonyme'), Contact, Somme en Ar -->
         <Column field="nom" :header="$t('col_nom')" sortable>
           <template #body="slotProps">
             <div class="name-cell">
@@ -136,17 +134,19 @@
       </DataTable>
     </div>
 
-    <!-- 4. Section Remarques au-dessous du tableau, citées par points -->
+    <!-- 4. Section Remarques : scrollable sans scrollbar avec dégradé d'opacité 0 en bas -->
     <section v-if="remarques && remarques.length > 0" class="remarques-section">
       <div class="remarques-header">
         <h3 class="remarques-heading">{{ $t('remarques_title') }}</h3>
       </div>
-      <ul class="remarques-list">
-        <li v-for="item in remarques" :key="item._id" class="remarque-point">
-          <span class="bullet-dot">•</span>
-          <span class="remarque-text">{{ getRemarqueText(item) }}</span>
-        </li>
-      </ul>
+      <div class="remarques-scroll-box">
+        <ul class="remarques-list">
+          <li v-for="item in remarques" :key="item._id" class="remarque-point">
+            <span class="bullet-dot">•</span>
+            <span class="remarque-text">{{ getRemarqueText(item) }}</span>
+          </li>
+        </ul>
+      </div>
     </section>
   </div>
 </template>
@@ -302,24 +302,31 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* Conteneur principal Home : s'adapte strictement à 100vh / 100dvh SANS SCROLL DE PAGE */
 .clean-page-container {
   max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
-  padding: 1.25rem 1.5rem 3.5rem;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0.65rem 1.25rem 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.65rem;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* 1. En-tête : Logo GÉANT qui s'étend jusqu'au sommet du header */
+/* 1. En-tête : Logo à gauche, Contrôles en haut à droite, Somme augmentée à droite */
 .hero-top-header {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
   width: 100%;
-  padding: 0.25rem 0 0.5rem;
-  gap: 2rem;
-  min-height: 195px;
+  padding: 0.15rem 0 0.35rem;
+  gap: 1.5rem;
+  flex-shrink: 0;
 }
 
 .logo-hero-side {
@@ -330,8 +337,8 @@ onBeforeUnmount(() => {
 }
 
 .header-logo-hero {
-  height: 195px;
-  max-height: 220px;
+  height: 165px;
+  max-height: 180px;
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -346,29 +353,29 @@ onBeforeUnmount(() => {
   align-items: flex-end;
   text-align: right;
   flex-shrink: 0;
-  padding: 0.25rem 0;
+  padding: 0.1rem 0;
 }
 
 .topbar-controls {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .ctrl-btn {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.05rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* Bouton thème : NOIR en mode clair, GRIS en mode sombre */
+/* Bouton thème : NOIR en clair, GRIS en dark */
 .theme-btn {
   background: #000000 !important;
   color: #ffffff !important;
@@ -397,7 +404,7 @@ onBeforeUnmount(() => {
   align-items: flex-end;
   text-align: right;
   margin-top: auto;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
 }
 
 .total-label {
@@ -406,30 +413,51 @@ onBeforeUnmount(() => {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
+/* Somme totale augmentée */
 .total-amount {
-  font-size: 3.2rem;
+  font-size: 3.5rem;
   font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
   transition: color 0.2s ease;
   white-space: nowrap;
 }
 
-/* 2. Barre de recherche */
+/* 2. Barre de recherche compacte */
 .search-div-transparent {
   position: relative;
   width: 100%;
+  flex-shrink: 0;
 }
 
-/* 3. Tableau et cellules */
+/* 3. Tableau et cellules : prend tout l'espace restant (flex) */
 .table-wrapper {
+  flex: 1 1 0;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 14px;
+}
+
+.table-wrapper :deep(.p-datatable) {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.table-wrapper :deep(.p-datatable-table-container) {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
 }
 
 .name-cell {
@@ -440,6 +468,11 @@ onBeforeUnmount(() => {
 .prenom-cell {
   font-weight: 500;
   font-size: 0.92rem;
+}
+
+.prenom-anonyme {
+  font-style: italic;
+  opacity: 0.75;
 }
 
 .contact-cell {
@@ -454,43 +487,62 @@ onBeforeUnmount(() => {
   font-variant-numeric: tabular-nums;
 }
 
-/* 4. Section Remarques par points */
+/* 4. Section Remarques : scrollable sans scrollbar avec dégradé d'opacité 0 en bas */
 .remarques-section {
-  margin-top: 0.5rem;
-  padding: 1rem 0.25rem;
+  flex-shrink: 0;
+  padding: 0.2rem 0.25rem 0.4rem;
+  margin-top: 0;
 }
 
 .remarques-header {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.35rem;
 }
 
 .remarques-heading {
-  font-size: 1.05rem;
+  font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
+.remarques-scroll-box {
+  max-height: 80px;
+  overflow-y: auto;
+  position: relative;
+  /* Scrollbar masquée */
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  /* Dégradé d'opacité 0 pour les textes en bas afin d'indiquer que c'est scrollable */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 24px), transparent 100%);
+}
+
+.remarques-scroll-box::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 .remarques-list {
   list-style: none;
-  padding: 0;
+  padding: 0 0 1.25rem 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.45rem;
 }
 
 .remarque-point {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  font-size: 0.96rem;
-  line-height: 1.6;
+  gap: 0.55rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
   word-break: break-word;
 }
 
 .bullet-dot {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   line-height: 1.3;
   flex-shrink: 0;
 }
@@ -502,22 +554,22 @@ onBeforeUnmount(() => {
 /* Empty & Loading states */
 .empty-state {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 2.5rem 1rem;
 }
 
 .empty-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .empty-title {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 
 .empty-desc {
-  font-size: 0.88rem;
-  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
 }
 
 .loading-state {
@@ -525,7 +577,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 2.5rem;
+  padding: 2rem;
   font-weight: 600;
 }
 
@@ -533,18 +585,22 @@ onBeforeUnmount(() => {
 /* RESPONSIVE : TABLETTE (641px - 1024px)                  */
 /* ======================================================== */
 @media (min-width: 641px) and (max-width: 1024px) {
-  .hero-top-header {
-    min-height: 150px;
-    gap: 1.5rem;
+  .clean-page-container {
+    padding: 0.65rem 1.15rem 0.5rem;
+    gap: 0.6rem;
   }
 
   .header-logo-hero {
-    height: 150px;
-    max-height: 165px;
+    height: 135px;
+    max-height: 145px;
   }
 
   .total-amount {
-    font-size: 2.6rem;
+    font-size: 2.85rem;
+  }
+
+  .remarques-scroll-box {
+    max-height: 72px;
   }
 }
 
@@ -553,11 +609,11 @@ onBeforeUnmount(() => {
 /* ======================================================== */
 @media (max-width: 640px) {
   .clean-page-container {
-    padding: 0.75rem 0.85rem 2.5rem;
-    gap: 1.15rem;
+    padding: 0.5rem 0.75rem 0.4rem;
+    gap: 0.55rem;
   }
 
-  /* L'en-tête reste en ROW : Logo TOUT À GAUCHE et Somme TOUT À DROITE */
+  /* L'en-tête reste en ligne : Logo TOUT À GAUCHE et Somme TOUT À DROITE */
   .hero-top-header {
     display: flex;
     flex-direction: row;
@@ -565,22 +621,22 @@ onBeforeUnmount(() => {
     justify-content: space-between;
     width: 100%;
     min-height: auto;
-    padding: 0.25rem 0 0.5rem;
-    gap: 0.75rem;
+    padding: 0.15rem 0 0.3rem;
+    gap: 0.65rem;
   }
 
-  /* Logo tout à gauche */
+  /* Logo encore augmenté pour la version mobile */
   .logo-hero-side {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     flex: 0 0 auto;
-    max-width: 46%;
+    max-width: 48%;
   }
 
   .header-logo-hero {
-    height: 86px;
-    max-height: 94px;
+    height: 108px;
+    max-height: 118px;
     width: auto;
     max-width: 100%;
     object-fit: contain;
@@ -601,21 +657,21 @@ onBeforeUnmount(() => {
   .topbar-controls {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.45rem;
   }
 
   .ctrl-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 0.88rem;
+    width: 32px;
+    height: 32px;
+    font-size: 0.82rem;
   }
 
   :deep(.lang-switcher-wrapper) {
-    width: 34px !important;
-    height: 34px !important;
+    width: 32px !important;
+    height: 32px !important;
   }
 
-  /* Boîte somme tout à droite, compacte */
+  /* Somme totale augmentée pour mobile */
   .total-compact-box {
     display: flex;
     flex-direction: column;
@@ -623,13 +679,13 @@ onBeforeUnmount(() => {
     text-align: right;
     width: 100%;
     margin-top: auto;
-    padding-top: 0.25rem;
+    padding-top: 0.2rem;
   }
 
   .total-label {
     font-size: 0.68rem;
     letter-spacing: 0.04em;
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -637,9 +693,10 @@ onBeforeUnmount(() => {
   }
 
   .total-amount {
-    font-size: clamp(1.3rem, 5.2vw, 1.85rem);
+    font-size: clamp(1.85rem, 6.8vw, 2.45rem);
     font-weight: 900;
-    line-height: 1.1;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
     white-space: nowrap;
   }
 
@@ -653,12 +710,26 @@ onBeforeUnmount(() => {
     font-size: 0.84rem;
   }
 
+  /* Remarques sur mobile : compact et scrollable sans barre avec dégradé */
+  .remarques-section {
+    padding: 0.15rem 0.15rem 0.25rem;
+  }
+
   .remarques-heading {
-    font-size: 0.95rem;
+    font-size: 0.84rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .remarques-scroll-box {
+    max-height: 62px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
   }
 
   .remarque-point {
-    font-size: 0.88rem;
+    font-size: 0.82rem;
+    gap: 0.45rem;
+    line-height: 1.4;
   }
 }
 </style>

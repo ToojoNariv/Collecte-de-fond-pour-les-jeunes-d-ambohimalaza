@@ -186,9 +186,14 @@
                         responsiveLayout="scroll"
                         stripedRows
                     >
+                        <Column header="" class="index-col" style="width: 3.5rem; text-align: center;">
+                            <template #body="slotProps">
+                                <span class="row-index-badge">{{ slotProps.index + 1 }}</span>
+                            </template>
+                        </Column>
                         <Column field="nom" :header="$t('col_nom')" sortable>
                             <template #body="slotProps">
-                                <span class="name-cell">{{ slotProps.data.nom }}</span>
+                                <span class="name-cell">{{ (slotProps.data.nom || '').toUpperCase() }}</span>
                             </template>
                         </Column>
                         <Column field="prenom" :header="$t('col_prenom')" sortable>
@@ -203,9 +208,9 @@
                                 <span class="contact-cell">{{ slotProps.data.contact }}</span>
                             </template>
                         </Column>
-                        <Column field="somme" :header="$t('col_somme')" sortable>
+                        <Column field="somme" :header="$t('col_somme')" sortable style="white-space: nowrap;">
                             <template #body="slotProps">
-                                <span class="somme-cell">{{ formatSomme(slotProps.data.somme) }}</span>
+                                <span class="somme-cell" style="white-space: nowrap !important;">{{ formatSomme(slotProps.data.somme) }}</span>
                             </template>
                         </Column>
                         <Column field="createdAt" :header="$t('date_saisie')" sortable>
@@ -437,10 +442,10 @@ const deleteRemarque = async (id) => {
     }
 };
 
-// Formatage en Ariary
+// Formatage en Ariary (nowrap)
 const formatSomme = (amount) => {
-    if (amount === undefined || amount === null || isNaN(amount)) return '0 Ar';
-    return new Intl.NumberFormat('fr-MG').format(amount) + ' Ar';
+    if (amount === undefined || amount === null || isNaN(amount)) return '0\u00A0Ar';
+    return new Intl.NumberFormat('fr-MG').format(amount) + '\u00A0Ar';
 };
 
 // Formatage date

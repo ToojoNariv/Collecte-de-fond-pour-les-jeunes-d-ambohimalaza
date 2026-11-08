@@ -99,11 +99,18 @@
           </div>
         </template>
 
-        <!-- Colonnes : Nom, Prénom (ou 'Prénom anonyme'), Contact, Somme en Ar -->
+        <!-- Colonne Index incrémenté (sans titre) -->
+        <Column header="" class="index-col" style="width: 3.5rem; text-align: center;">
+          <template #body="slotProps">
+            <span class="row-index-badge">{{ slotProps.index + 1 }}</span>
+          </template>
+        </Column>
+
+        <!-- Colonnes : Nom (majuscules), Prénom (ou 'Prénom anonyme'), Contact masqué, Somme en Ar (nowrap) -->
         <Column field="nom" :header="$t('col_nom')" sortable>
           <template #body="slotProps">
             <div class="name-cell">
-              {{ slotProps.data.nom }}
+              {{ (slotProps.data.nom || '').toUpperCase() }}
             </div>
           </template>
         </Column>
@@ -119,12 +126,12 @@
         <Column field="contact" :header="$t('col_contact')" sortable>
           <template #body="slotProps">
             <div class="contact-cell">
-              {{ slotProps.data.contact }}
+              {{ formatContact(slotProps.data.contact) }}
             </div>
           </template>
         </Column>
 
-        <Column field="somme" :header="$t('col_somme')" sortable>
+        <Column field="somme" :header="$t('col_somme')" sortable class="somme-col" style="white-space: nowrap;">
           <template #body="slotProps">
             <div class="somme-cell">
               {{ formatSomme(slotProps.data.somme) }}
@@ -196,12 +203,109 @@ const toggleTheme = () => {
   isDarkMode.value = newTheme;
 };
 
-// Formatage en Ariary (Ar)
+// Formatage en Ariary (Ar) avec espace insécable et strict affichage en ligne
 const formatSomme = (amount) => {
-  if (amount === undefined || amount === null || isNaN(amount)) return '0 Ar';
+  if (amount === undefined || amount === null || isNaN(amount)) return '0\u00A0Ar';
   return new Intl.NumberFormat('fr-MG', {
     maximumFractionDigits: 0
-  }).format(amount) + ' Ar';
+  }).format(amount) + '\u00A0Ar';
+};
+
+// Formatage et masquage confidentiel des numéros de téléphone et contacts
+const formatContact = (contact) => {
+  if (!contact || typeof contact !== 'string') return '* ** ** *** **';
+  const trimmed = contact.trim();
+  if (!trimmed) return '* ** ** *** **';
+
+  const digits = trimmed.replace(/\D/g, '');
+  // S'il ne s'agit pas de chiffres / numéro valide (moins de 6 chiffres, ex: 'Tap tap send', 'Payment_ LIMITEA', etc.)
+  if (digits.length < 6) {
+    return '* ** ** *** **';
+  }
+
+  // 1. Détection des numéros malgaches (10 chiffres commençant par 0 ou 9 chiffres débutant par 20/32/33/34/38)
+  const isMadaLocal = /^(0)?(20|32|33|34|38)\d{7}$/.test(digits) && !trimmed.startsWith('+') && !trimmed.startsWith('00');
+  const isMadaInternational = /^(261)(20|32|33|34|38)\d{7}$/.test(digits);
+
+  if (isMadaLocal) {
+    let d = digits;
+    if (d.length === 9) d = '0' + d;
+    // Format strict demandé : 0 00 00 000 **
+    return `${d[0]} ${d.slice(1, 3)} ${d.slice(3, 5)} ${d.slice(5, 8)} **`;
+  }
+
+  if (isMadaInternational) {
+    const d = digits.slice(3);
+    if (trimmed.startsWith('+')) {
+      return `+261 ${d.slice(0, 2)} ${d.slice(2, 4)} ${d.slice(4, 7)} **`;
+    }
+    return `0 ${d.slice(0, 2)} ${d.slice(2, 4)} ${d.slice(4, 7)} **`;
+  }
+
+  // 2. Numéros étrangers (Canada, Suisse, France, Belgique, etc.)
+  // Si le numéro a déjà son format d'origine (espaces, tirets, parenthèses, points)
+  const hasOriginalFormatting = /[\s\-\.\(\)]/.test(trimmed);
+  if (hasOriginalFormatting) {
+    let count = 0;
+    const chars = trimmed.split('');
+    for (let i = chars.length - 1; i >= 0; i--) {
+      if (/\d/.test(chars[i])) {
+        chars[i] = '*';
+        count++;
+        if (count === 2) break;
+      }
+    }
+    return chars.join('');
+  }
+
+  // Si le numéro étranger a été saisi d'un seul bloc (sans espaces)
+  const cleanStr = trimmed.replace(/^00/, '+');
+
+  // Canada / USA (+1)
+  if (cleanStr.startsWith('+1') || (digits.length === 11 && digits.startsWith('1'))) {
+    const d = digits.startsWith('1') ? digits.slice(1) : digits;
+    if (d.length === 10) {
+      return `+1 ${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6, 8)} **`;
+    }
+  }
+
+  // France (+33 ou commençant par 06/07/01.. avec 10 chiffres)
+  if (cleanStr.startsWith('+33') || /^0[1-9]\d{8}$/.test(digits)) {
+    let d = digits;
+    if (d.startsWith('33')) d = '0' + d.slice(2);
+    if (d.length === 10) {
+      const prefix = cleanStr.startsWith('+33') ? '+33 ' + d[1] : d.slice(0, 2);
+      return `${prefix} ${d.slice(2, 4)} ${d.slice(4, 6)} ${d.slice(6, 8)} **`;
+    }
+  }
+
+  // Suisse (+41)
+  if (cleanStr.startsWith('+41') || /^41\d{9}$/.test(digits)) {
+    const d = digits.startsWith('41') ? digits.slice(2) : digits;
+    if (d.length === 9) {
+      return `+41 ${d.slice(0, 2)} ${d.slice(2, 5)} ${d.slice(5, 7)} **`;
+    }
+  }
+
+  // Belgique (+32)
+  if (cleanStr.startsWith('+32') || /^32\d{8,9}$/.test(digits)) {
+    const d = digits.startsWith('32') ? digits.slice(2) : digits;
+    if (d.length >= 8) {
+      return `+32 ${d.slice(0, 3)} ${d.slice(3, 5)} ${d.slice(5, 7)} **`;
+    }
+  }
+
+  // Fallback général : masquer les 2 derniers chiffres
+  let count = 0;
+  const chars = trimmed.split('');
+  for (let i = chars.length - 1; i >= 0; i--) {
+    if (/\d/.test(chars[i])) {
+      chars[i] = '*';
+      count++;
+      if (count === 2) break;
+    }
+  }
+  return chars.join('');
 };
 
 // Texte de la remarque selon la langue sélectionnée
@@ -252,6 +356,7 @@ const filteredProducts = computed(() => {
     const prenom = (item.prenom || 'Prénom anonyme').toLowerCase();
     const contactRaw = (item.contact || '').toLowerCase();
     const contactCleaned = contactRaw.replace(/\s+/g, '');
+    const contactMasked = formatContact(item.contact).toLowerCase();
 
     return parts.every((p) => {
       const pLower = p.toLowerCase();
@@ -265,6 +370,7 @@ const filteredProducts = computed(() => {
         nom.includes(pLower) ||
         prenom.includes(pLower) ||
         contactRaw.includes(pLower) ||
+        contactMasked.includes(pLower) ||
         (pCleanDigits && contactCleaned.includes(pCleanDigits))
       );
     });
@@ -460,9 +566,34 @@ onBeforeUnmount(() => {
   overflow-x: auto !important;
 }
 
+.index-col {
+  width: 3.5rem;
+  min-width: 3rem;
+  max-width: 4rem;
+  text-align: center !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.row-index-badge {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #737373;
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+
+html.dark .row-index-badge,
+body.dark .row-index-badge,
+.dark .row-index-badge {
+  color: #a3a3a3;
+}
+
 .name-cell {
   font-weight: 800;
   font-size: 0.95rem;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em;
 }
 
 .prenom-cell {
@@ -476,15 +607,24 @@ onBeforeUnmount(() => {
 }
 
 .contact-cell {
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.92rem;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  white-space: nowrap !important;
+}
+
+.somme-col {
+  white-space: nowrap !important;
 }
 
 .somme-cell {
   font-weight: 800;
   font-size: 0.95rem;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap !important;
+  display: inline-block;
+  word-break: keep-all;
 }
 
 /* 4. Section Remarques : scrollable sans scrollbar avec dégradé d'opacité 0 en bas */
@@ -679,6 +819,7 @@ onBeforeUnmount(() => {
     text-align: right;
     width: 100%;
     margin-top: auto;
+    margin-top: 0;
     padding-top: 0.2rem;
   }
 

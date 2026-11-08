@@ -78,6 +78,20 @@ body.dark {
 .name-cell {
     color: #111111;
     font-weight: 800;
+    text-transform: uppercase !important;
+}
+
+.row-index-badge {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #737373;
+    font-variant-numeric: tabular-nums;
+}
+
+html.dark .row-index-badge,
+body.dark .row-index-badge,
+.dark .row-index-badge {
+    color: #a3a3a3;
 }
 
 .prenom-cell {
@@ -93,11 +107,13 @@ body.dark {
 .contact-cell {
     color: #444444;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .somme-cell {
     color: #111111;
     font-weight: 800;
+    white-space: nowrap !important;
 }
 
 .remarques-heading {

@@ -931,7 +931,7 @@ body.dark .remarque-text,
 
   /* Remarques (Fanamarihana) sur mobile : fond gris, sans bordure, texte bien noir, scrollable avec dégradé */
   .remarques-section {
-    padding: 0.95rem 0.95rem 0.55rem; /* Padding top augmenté */
+    padding: 0.95rem 0.95rem 0.40rem; /* Padding top augmenté */
     border-radius: 14px;
     border: none !important;
   }

@@ -36,6 +36,18 @@ body.dark,
     --app-border: #2e2e2e;
 }
 
+html,
+body,
+#app,
+.app-root {
+    margin: 0;
+    padding: 0;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+html,
 body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background: var(--app-bg);
@@ -45,8 +57,13 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+html.dark,
 html.dark body,
-body.dark {
+body.dark,
+.dark {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
     background: #121212 !important;
     color: #ffffff !important;
 }

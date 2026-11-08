@@ -430,6 +430,9 @@ onBeforeUnmount(() => {
   gap: 0.65rem;
   overflow: hidden;
   box-sizing: border-box;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* 1. En-tête : Logo à gauche (agrandi), Contrôles en haut à droite, Somme juste en dessous avec distance considérablement réduite */
@@ -452,7 +455,7 @@ onBeforeUnmount(() => {
 }
 
 .header-logo-hero {
-  height: clamp(195px, 17vw, 240px);
+  height: clamp(85px, 7.5vw, 110px);
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -502,14 +505,12 @@ onBeforeUnmount(() => {
   color: #ffffff !important;
 }
 
-:global(html.dark) .theme-btn,
-:global(body.dark) .theme-btn {
+.dark .theme-btn {
   background: #242424 !important;
   color: #f3f3f3 !important;
 }
 
-:global(html.dark) .theme-btn:hover,
-:global(body.dark) .theme-btn:hover {
+.dark .theme-btn:hover {
   background: #303030 !important;
   color: #ffffff !important;
 }
@@ -641,10 +642,10 @@ body.dark .row-index-badge,
 .remarques-section {
   flex-shrink: 0;
   background: #efefef !important;
-  border-radius: 14px;
+  border-radius: 15px;
   border: none !important;
   padding: 1.15rem 1.25rem 0.75rem; /* Padding top augmenté */
-  margin-top: 0;
+  margin-top: 3vh;
   transition: background-color 0.2s ease;
 }
 

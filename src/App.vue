@@ -150,26 +150,22 @@ onMounted(() => {
 }
 
 /* En mode dark */
-:global(html.dark) .theme-btn,
-:global(body.dark) .theme-btn {
+.dark .theme-btn {
   background: #242424 !important;
   color: #f3f3f3 !important;
 }
 
-:global(html.dark) .theme-btn:hover,
-:global(body.dark) .theme-btn:hover {
+.dark .theme-btn:hover {
   background: #303030 !important;
   color: #ffffff !important;
 }
 
-:global(html.dark) .back-btn,
-:global(body.dark) .back-btn {
+.dark .back-btn {
   background: #242424;
   color: #f3f3f3;
 }
 
-:global(html.dark) .back-btn:hover,
-:global(body.dark) .back-btn:hover {
+.dark .back-btn:hover {
   background: #303030;
   color: #ffffff;
 }

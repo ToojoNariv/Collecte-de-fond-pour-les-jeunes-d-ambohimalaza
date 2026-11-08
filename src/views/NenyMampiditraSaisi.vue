@@ -983,7 +983,7 @@ onBeforeUnmount(() => {
     border: none;
 }
 
-:global(html.dark) .login-card {
+.dark .login-card {
     background: #181818;
     box-shadow: none;
 }
@@ -1007,7 +1007,7 @@ onBeforeUnmount(() => {
     border: none;
 }
 
-:global(html.dark) .lock-circle {
+.dark .lock-circle {
     background: #242424;
     color: #ffffff;
 }
@@ -1018,7 +1018,7 @@ onBeforeUnmount(() => {
     color: #171717;
 }
 
-:global(html.dark) .login-title {
+.dark .login-title {
     color: #ffffff;
 }
 
@@ -1028,7 +1028,7 @@ onBeforeUnmount(() => {
     margin-top: 0.3rem;
 }
 
-:global(html.dark) .login-subtitle {
+.dark .login-subtitle {
     color: #a3a3a3;
 }
 
@@ -1050,7 +1050,7 @@ onBeforeUnmount(() => {
     color: #444444;
 }
 
-:global(html.dark) .form-group label {
+.dark .form-group label {
     color: #cbd5e1;
 }
 
@@ -1075,7 +1075,7 @@ onBeforeUnmount(() => {
     color: #111111;
 }
 
-:global(html.dark) .input-with-icon :deep(input) {
+.dark .input-with-icon :deep(input) {
     background: #202020;
     color: #ffffff;
 }
@@ -1092,7 +1092,7 @@ onBeforeUnmount(() => {
     gap: 0.5rem;
 }
 
-:global(html.dark) .error-banner {
+.dark .error-banner {
     background: #222222;
     border-left-color: #ffffff;
     color: #ffffff;
@@ -1112,12 +1112,12 @@ onBeforeUnmount(() => {
     background: #222222 !important;
 }
 
-:global(html.dark) .submit-btn {
+.dark .submit-btn {
     background: #ffffff !important;
     color: #121212 !important;
 }
 
-:global(html.dark) .submit-btn:hover {
+.dark .submit-btn:hover {
     background: #e5e5e5 !important;
 }
 
@@ -1135,7 +1135,7 @@ onBeforeUnmount(() => {
     gap: 1rem;
 }
 
-:global(html.dark) .admin-topbar {
+.dark .admin-topbar {
     background: #181818;
 }
 
@@ -1157,7 +1157,7 @@ onBeforeUnmount(() => {
     font-size: 1rem;
 }
 
-:global(html.dark) .user-avatar-tag {
+.dark .user-avatar-tag {
     background: #282828;
     color: #ffffff;
 }
@@ -1168,7 +1168,7 @@ onBeforeUnmount(() => {
     color: #171717;
 }
 
-:global(html.dark) .user-welcome {
+.dark .user-welcome {
     color: #ffffff;
 }
 
@@ -1196,12 +1196,12 @@ onBeforeUnmount(() => {
     background: #e4e4e4;
 }
 
-:global(html.dark) .view-public-btn {
+.dark .view-public-btn {
     background: #242424;
     color: #ffffff;
 }
 
-:global(html.dark) .view-public-btn:hover {
+.dark .view-public-btn:hover {
     background: #303030;
 }
 
@@ -1224,12 +1224,12 @@ onBeforeUnmount(() => {
     background: #222222;
 }
 
-:global(html.dark) .logout-btn {
+.dark .logout-btn {
     background: #242424;
     color: #ffffff;
 }
 
-:global(html.dark) .logout-btn:hover {
+.dark .logout-btn:hover {
     background: #303030;
 }
 
@@ -1242,8 +1242,8 @@ onBeforeUnmount(() => {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
 
-:global(html.dark) .form-card,
-:global(html.dark) .recent-table-card {
+.dark .form-card,
+.dark .recent-table-card {
     background: #181818;
     box-shadow: none;
 }
@@ -1263,8 +1263,8 @@ onBeforeUnmount(() => {
     gap: 0.5rem;
 }
 
-:global(html.dark) .form-main-title,
-:global(html.dark) .table-title {
+.dark .form-main-title,
+.dark .table-title {
     color: #ffffff;
 }
 
@@ -1274,8 +1274,8 @@ onBeforeUnmount(() => {
     margin-top: 0.2rem;
 }
 
-:global(html.dark) .form-main-subtitle,
-:global(html.dark) .table-subtitle {
+.dark .form-main-subtitle,
+.dark .table-subtitle {
     color: #a3a3a3;
 }
 
@@ -1307,7 +1307,7 @@ onBeforeUnmount(() => {
     color: #444444;
 }
 
-:global(html.dark) .form-field label {
+.dark .form-field label {
     color: #cbd5e1;
 }
 
@@ -1321,7 +1321,7 @@ onBeforeUnmount(() => {
     font-weight: 500;
 }
 
-:global(html.dark) .form-field :deep(input) {
+.dark .form-field :deep(input) {
     background: #202020;
     color: #ffffff;
 }
@@ -1344,7 +1344,7 @@ onBeforeUnmount(() => {
     color: #171717;
 }
 
-:global(html.dark) .somme-addon {
+.dark .somme-addon {
     color: #ffffff;
 }
 
@@ -1368,12 +1368,12 @@ onBeforeUnmount(() => {
     background: #222222 !important;
 }
 
-:global(html.dark) .submit-donation-btn {
+.dark .submit-donation-btn {
     background: #ffffff !important;
     color: #121212 !important;
 }
 
-:global(html.dark) .submit-donation-btn:hover {
+.dark .submit-donation-btn:hover {
     background: #e5e5e5 !important;
 }
 
@@ -1395,11 +1395,11 @@ onBeforeUnmount(() => {
     color: #111111;
 }
 
-:global(html.dark) .reset-btn {
+.dark .reset-btn {
     color: #a3a3a3;
 }
 
-:global(html.dark) .reset-btn:hover {
+.dark .reset-btn:hover {
     color: #ffffff;
 }
 
@@ -1429,12 +1429,12 @@ onBeforeUnmount(() => {
     color: #ffffff;
 }
 
-:global(html.dark) .edit-action-btn {
+.dark .edit-action-btn {
     background: #242424;
     color: #cccccc;
 }
 
-:global(html.dark) .edit-action-btn:hover {
+.dark .edit-action-btn:hover {
     background: #ffffff;
     color: #000000;
 }
@@ -1458,16 +1458,101 @@ onBeforeUnmount(() => {
     color: #ffffff;
 }
 
-:global(html.dark) .delete-action-btn {
+.dark .delete-action-btn {
     background: #242424;
     color: #cccccc;
 }
 
-:global(html.dark) .delete-action-btn:hover {
+.dark .delete-action-btn:hover {
     background: #ffffff;
     color: #000000;
 }
 
+.refresh-table-btn {
+    background: #efefef;
+    border: none;
+    color: #171717;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refresh-table-btn:hover {
+    background: #e0e0e0;
+}
+
+.dark .refresh-table-btn {
+    background: #242424;
+    color: #ffffff;
+}
+
+.dark .refresh-table-btn:hover {
+    background: #303030;
+}
+
+.prenom-anonyme {
+    font-style: italic;
+    opacity: 0.75;
+}
+
+.date-cell {
+    font-size: 0.84rem;
+    color: #737373;
+}
+
+.dark .date-cell {
+    color: #a3a3a3;
+}
+
+.remarque-table-text {
+    font-size: 0.88rem;
+    color: #262626;
+    line-height: 1.4;
+}
+
+.dark .remarque-table-text {
+    color: #e5e5e5;
+}
+
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+}
+
+@media (max-width: 640px) {
+    .saisi-page-container {
+        padding: 0.5rem 0.85rem 2.5rem;
+    }
+    .form-card, .recent-table-card {
+        padding: 1.15rem 1rem;
+        border-radius: 14px;
+    }
+    .admin-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.85rem;
+    }
+    .admin-topbar .topbar-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .col-span-2 {
+        grid-column: span 1;
+    }
+}
+</style>
+
+<style>
 /* --- MODALS DE MODIFICATION --- */
 .modal-backdrop {
     position: fixed;
@@ -1507,7 +1592,7 @@ onBeforeUnmount(() => {
     to { transform: scale(1); opacity: 1; }
 }
 
-:global(html.dark) .modal-card {
+.dark .modal-card {
     background: #181818;
     border-color: #2e2e2e;
     box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.65);
@@ -1521,7 +1606,7 @@ onBeforeUnmount(() => {
     border-bottom: 1px solid #efefef;
 }
 
-:global(html.dark) .modal-header {
+.dark .modal-header {
     border-color: #262626;
 }
 
@@ -1544,7 +1629,7 @@ onBeforeUnmount(() => {
     flex-shrink: 0;
 }
 
-:global(html.dark) .modal-icon-badge {
+.dark .modal-icon-badge {
     background: #ffffff;
     color: #000000;
 }
@@ -1557,7 +1642,7 @@ onBeforeUnmount(() => {
     line-height: 1.2;
 }
 
-:global(html.dark) .modal-title {
+.dark .modal-title {
     color: #ffffff;
 }
 
@@ -1567,7 +1652,7 @@ onBeforeUnmount(() => {
     margin-top: 0.15rem;
 }
 
-:global(html.dark) .modal-subtitle {
+.dark .modal-subtitle {
     color: #999999;
 }
 
@@ -1591,7 +1676,7 @@ onBeforeUnmount(() => {
     color: #111111;
 }
 
-:global(html.dark) .modal-close-btn:hover {
+.dark .modal-close-btn:hover {
     background: #242424;
     color: #ffffff;
 }
@@ -1633,7 +1718,7 @@ onBeforeUnmount(() => {
     background: #fafafa;
 }
 
-:global(html.dark) .modal-footer {
+.dark .modal-footer {
     background: #141414;
     border-color: #262626;
 }
@@ -1655,12 +1740,12 @@ onBeforeUnmount(() => {
     color: #111111;
 }
 
-:global(html.dark) .modal-cancel-btn {
+.dark .modal-cancel-btn {
     border-color: #3f3f46;
     color: #a1a1aa;
 }
 
-:global(html.dark) .modal-cancel-btn:hover {
+.dark .modal-cancel-btn:hover {
     background: #27272a;
     color: #ffffff;
 }
@@ -1680,97 +1765,14 @@ onBeforeUnmount(() => {
     border-color: #222222 !important;
 }
 
-:global(html.dark) .modal-submit-btn {
+.dark .modal-submit-btn {
     background: #ffffff !important;
     border: 1px solid #ffffff !important;
     color: #000000 !important;
 }
 
-:global(html.dark) .modal-submit-btn:hover {
+.dark .modal-submit-btn:hover {
     background: #e5e5e5 !important;
     border-color: #e5e5e5 !important;
-}
-
-.refresh-table-btn {
-    background: #efefef;
-    border: none;
-    color: #171717;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.refresh-table-btn:hover {
-    background: #e0e0e0;
-}
-
-:global(html.dark) .refresh-table-btn {
-    background: #242424;
-    color: #ffffff;
-}
-
-:global(html.dark) .refresh-table-btn:hover {
-    background: #303030;
-}
-
-.prenom-anonyme {
-    font-style: italic;
-    opacity: 0.75;
-}
-
-.date-cell {
-    font-size: 0.84rem;
-    color: #737373;
-}
-
-:global(html.dark) .date-cell {
-    color: #a3a3a3;
-}
-
-.remarque-table-text {
-    font-size: 0.88rem;
-    color: #262626;
-    line-height: 1.4;
-}
-
-:global(html.dark) .remarque-table-text {
-    color: #e5e5e5;
-}
-
-.table-responsive-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 12px;
-}
-
-@media (max-width: 640px) {
-    .saisi-page-container {
-        padding: 0.5rem 0.85rem 2.5rem;
-    }
-    .form-card, .recent-table-card {
-        padding: 1.15rem 1rem;
-        border-radius: 14px;
-    }
-    .admin-topbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.85rem;
-    }
-    .admin-topbar .topbar-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    .col-span-2 {
-        grid-column: span 1;
-    }
 }
 </style>

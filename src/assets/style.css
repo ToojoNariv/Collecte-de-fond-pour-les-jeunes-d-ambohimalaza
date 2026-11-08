@@ -1,0 +1,536 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --app-bg: #fbfbfb;
+    --app-text: #171717;
+    --app-text-muted: #737373;
+    --app-table-header-bg: #efefef;
+    --app-table-header-text: #262626;
+    --app-row-bg: #ffffff;
+    --app-row-bg-odd: #f8f8f8;
+    --app-row-hover: #f0f0f0;
+    --app-input-bg: #efefef;
+    --app-input-text: #111111;
+    --app-input-placeholder: #737373;
+    --app-border: #e5e5e5;
+}
+
+html.dark,
+body.dark,
+.dark {
+    --app-bg: #121212;
+    --app-text: #ffffff;
+    --app-text-muted: #a3a3a3;
+    --app-table-header-bg: #202020;
+    --app-table-header-text: #ffffff;
+    --app-row-bg: #181818;
+    --app-row-bg-odd: #1e1e1e;
+    --app-row-hover: #262626;
+    --app-input-bg: #202020;
+    --app-input-text: #ffffff;
+    --app-input-placeholder: #9ca3af;
+    --app-border: #2e2e2e;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--app-bg);
+    color: var(--app-text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark body,
+body.dark {
+    background: #121212 !important;
+    color: #ffffff !important;
+}
+
+/* Masquer impérativement tout badge / host de licence PrimeUI */
+#p-license-host {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+}
+
+/* ======================================================== */
+/* TYPOGRAPHIE ET COULEURS DE TEXTE : CLAIR & SOMBRE         */
+/* ======================================================== */
+
+/* Mode clair */
+.total-label {
+    color: #737373 !important;
+}
+
+.total-amount {
+    color: #111111;
+}
+
+.name-cell {
+    color: #111111;
+    font-weight: 800;
+}
+
+.prenom-cell {
+    color: #222222;
+    font-weight: 500;
+}
+
+.contact-cell {
+    color: #444444;
+    font-weight: 500;
+}
+
+.somme-cell {
+    color: #111111;
+    font-weight: 800;
+}
+
+.remarques-heading {
+    color: #555555;
+}
+
+.remarque-point,
+.remarque-text {
+    color: #1f1f1f;
+}
+
+.bullet-dot {
+    color: #737373;
+}
+
+.empty-title {
+    color: #262626;
+}
+
+.empty-desc {
+    color: #737373;
+}
+
+.loading-state {
+    color: #737373;
+}
+
+/* MODE DARK : TOUS LES TEXTES STRICTEMENT BLANCS / GRIS TRÈS CLAIRS */
+html.dark .total-label,
+body.dark .total-label,
+.dark .total-label {
+    color: #a3a3a3 !important;
+}
+
+html.dark .total-amount,
+body.dark .total-amount,
+.dark .total-amount {
+    color: #ffffff !important;
+}
+
+html.dark .name-cell,
+body.dark .name-cell,
+.dark .name-cell {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+}
+
+html.dark .prenom-cell,
+body.dark .prenom-cell,
+.dark .prenom-cell {
+    color: #f3f4f6 !important;
+    font-weight: 500 !important;
+}
+
+html.dark .contact-cell,
+body.dark .contact-cell,
+.dark .contact-cell {
+    color: #d1d5db !important;
+    font-weight: 500 !important;
+}
+
+html.dark .somme-cell,
+body.dark .somme-cell,
+.dark .somme-cell {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+}
+
+html.dark .remarques-heading,
+body.dark .remarques-heading,
+.dark .remarques-heading {
+    color: #e5e5e5 !important;
+}
+
+html.dark .remarque-point,
+body.dark .remarque-point,
+.dark .remarque-point,
+html.dark .remarque-text,
+body.dark .remarque-text,
+.dark .remarque-text {
+    color: #f3f4f6 !important;
+}
+
+html.dark .bullet-dot,
+body.dark .bullet-dot,
+.dark .bullet-dot {
+    color: #a3a3a3 !important;
+}
+
+html.dark .empty-title,
+body.dark .empty-title,
+.dark .empty-title {
+    color: #ffffff !important;
+}
+
+html.dark .empty-desc,
+body.dark .empty-desc,
+.dark .empty-desc {
+    color: #9ca3af !important;
+}
+
+html.dark .empty-icon,
+body.dark .empty-icon,
+.dark .empty-icon {
+    color: #6b7280 !important;
+}
+
+html.dark .loading-state,
+body.dark .loading-state,
+.dark .loading-state {
+    color: #ffffff !important;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+/* ======================================================== */
+/* BARRE DE RECHERCHE AVEC ANIMATION DU LABEL FLOTTANT      */
+/* ======================================================== */
+.search-div-transparent {
+    position: relative;
+    width: 100%;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.search-div-transparent .p-floatlabel {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.search-div-transparent .p-floatlabel input,
+.search-div-transparent input.search-input-bold {
+    width: 100%;
+    min-height: 64px !important;
+    border-radius: 14px !important;
+    padding: 1.45rem 3rem 0.45rem 1.4rem !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    border: none !important;
+    outline: none !important;
+    background: #efefef !important;
+    color: #111111 !important;
+    caret-color: #111111 !important;
+    box-shadow: none !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+html.dark .search-div-transparent .p-floatlabel input,
+html.dark .search-div-transparent input.search-input-bold,
+body.dark .search-div-transparent .p-floatlabel input,
+body.dark .search-div-transparent input.search-input-bold,
+.dark .search-div-transparent .p-floatlabel input,
+.dark .search-div-transparent input.search-input-bold {
+    background: #202020 !important;
+    color: #ffffff !important;
+    caret-color: #ffffff !important;
+}
+
+.search-div-transparent .p-floatlabel input:focus,
+.search-div-transparent input.search-input-bold:focus {
+    box-shadow: 0 0 0 2px rgba(160, 160, 160, 0.4) !important;
+}
+
+html.dark .search-div-transparent .p-floatlabel input:focus,
+html.dark .search-div-transparent input.search-input-bold:focus,
+body.dark .search-div-transparent .p-floatlabel input:focus,
+body.dark .search-div-transparent input.search-input-bold:focus,
+.dark .search-div-transparent .p-floatlabel input:focus,
+.dark .search-div-transparent input.search-input-bold:focus {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25) !important;
+}
+
+/* 1. ÉTAT INITIAL DU LABEL : Centré verticalement comme un placeholder */
+.search-div-transparent .p-floatlabel label {
+    position: absolute !important;
+    left: 1.4rem !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #737373 !important;
+    font-size: 1.15rem !important;
+    font-weight: 500 !important;
+    pointer-events: none !important;
+    transition: top 0.24s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.24s cubic-bezier(0.4, 0, 0.2, 1), 
+                font-size 0.24s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.2s ease !important;
+    z-index: 3 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 3.5rem);
+}
+
+html.dark .search-div-transparent .p-floatlabel label,
+body.dark .search-div-transparent .p-floatlabel label,
+.dark .search-div-transparent .p-floatlabel label {
+    color: #9ca3af !important;
+}
+
+/* 2. ÉTAT ACTIF / FOCUS / TEXTE SAISI : Le label s'anime vers le haut */
+.search-div-transparent .p-floatlabel:has(input:focus) label,
+.search-div-transparent .p-floatlabel:has(input.p-filled) label,
+.search-div-transparent .p-floatlabel.p-floatlabel-active label {
+    top: 0.55rem !important;
+    transform: translateY(0) !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    color: #666666 !important;
+}
+
+html.dark .search-div-transparent .p-floatlabel:has(input:focus) label,
+html.dark .search-div-transparent .p-floatlabel:has(input.p-filled) label,
+html.dark .search-div-transparent .p-floatlabel.p-floatlabel-active label,
+body.dark .search-div-transparent .p-floatlabel:has(input:focus) label,
+body.dark .search-div-transparent .p-floatlabel:has(input.p-filled) label,
+body.dark .search-div-transparent .p-floatlabel.p-floatlabel-active label,
+.dark .search-div-transparent .p-floatlabel:has(input:focus) label,
+.dark .search-div-transparent .p-floatlabel:has(input.p-filled) label,
+.dark .search-div-transparent .p-floatlabel.p-floatlabel-active label {
+    color: #cbd5e1 !important;
+}
+
+/* Bouton effacer la recherche */
+.clear-search-btn {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #d4d4d4;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: #262626;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+
+.clear-search-btn:hover {
+    background: #b5b5b5;
+}
+
+html.dark .clear-search-btn,
+body.dark .clear-search-btn,
+.dark .clear-search-btn {
+    background: #333333 !important;
+    color: #ffffff !important;
+}
+
+html.dark .clear-search-btn:hover,
+body.dark .clear-search-btn:hover,
+.dark .clear-search-btn:hover {
+    background: #444444 !important;
+}
+
+/* ======================================================== */
+/* DATATABLE - SCROLLABLE & RESPONSIVE                     */
+/* ======================================================== */
+.p-datatable {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 14px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.p-datatable .p-datatable-table {
+    width: 100% !important;
+}
+
+/* En-têtes */
+.p-datatable .p-datatable-header,
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable th.p-datatable-header-cell {
+    background: #efefef !important;
+    color: #262626 !important;
+    font-weight: 700 !important;
+    font-size: 0.92rem !important;
+    padding: 1.05rem 1.25rem !important;
+    border: none !important;
+}
+
+.p-datatable .p-datatable-column-title {
+    color: inherit !important;
+    font-weight: 700 !important;
+}
+
+.p-datatable .p-datatable-sort-icon {
+    color: inherit !important;
+    font-size: 0.85rem;
+}
+
+/* En-têtes en Dark Mode : Blanc éclatant */
+html.dark .p-datatable .p-datatable-thead > tr > th,
+html.dark .p-datatable th.p-datatable-header-cell,
+html.dark .p-datatable .p-datatable-column-title,
+html.dark .p-datatable .p-datatable-sort-icon,
+body.dark .p-datatable .p-datatable-thead > tr > th,
+body.dark .p-datatable th.p-datatable-header-cell,
+body.dark .p-datatable .p-datatable-column-title,
+body.dark .p-datatable .p-datatable-sort-icon,
+.dark .p-datatable .p-datatable-thead > tr > th,
+.dark .p-datatable th.p-datatable-header-cell,
+.dark .p-datatable .p-datatable-column-title,
+.dark .p-datatable .p-datatable-sort-icon {
+    background: #202020 !important;
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    border: none !important;
+}
+
+/* Lignes et cellules */
+.p-datatable .p-datatable-tbody > tr > td {
+    padding: 1.05rem 1.25rem !important;
+    border: none !important;
+    background: #ffffff;
+    color: #171717;
+}
+
+/* Lignes et cellules en Dark Mode */
+html.dark .p-datatable .p-datatable-tbody > tr > td,
+body.dark .p-datatable .p-datatable-tbody > tr > td,
+.dark .p-datatable .p-datatable-tbody > tr > td {
+    background: #181818 !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+/* Lignes alternées (striped) */
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd > td {
+    background: #f8f8f8 !important;
+}
+
+html.dark .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd > td,
+body.dark .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd > td,
+.dark .p-datatable.p-datatable-striped .p-datatable-tbody > tr.p-row-odd > td {
+    background: #1e1e1e !important;
+}
+
+/* Survol des lignes */
+.p-datatable .p-datatable-tbody > tr:hover > td {
+    background: #f0f0f0 !important;
+}
+
+html.dark .p-datatable .p-datatable-tbody > tr:hover > td,
+body.dark .p-datatable .p-datatable-tbody > tr:hover > td,
+.dark .p-datatable .p-datatable-tbody > tr:hover > td {
+    background: #262626 !important;
+}
+
+/* Scrollbar personnalisée */
+.p-datatable-table-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.p-datatable-table-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.p-datatable-table-container::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 4px;
+}
+
+html.dark .p-datatable-table-container::-webkit-scrollbar-thumb,
+body.dark .p-datatable-table-container::-webkit-scrollbar-thumb,
+.dark .p-datatable-table-container::-webkit-scrollbar-thumb {
+    background: #3e3e3e;
+}
+
+/* ======================================================== */
+/* RESPONSIVE : MOBILE (< 640px) & TABLETTE (641px - 1024px) */
+/* ======================================================== */
+@media (max-width: 640px) {
+    .search-div-transparent .p-floatlabel input,
+    .search-div-transparent input.search-input-bold {
+        min-height: 56px !important;
+        font-size: 1.05rem !important;
+        padding: 1.3rem 2.6rem 0.35rem 1rem !important;
+    }
+
+    .search-div-transparent .p-floatlabel label {
+        left: 1rem !important;
+        font-size: 0.95rem !important;
+        max-width: calc(100% - 2.8rem);
+    }
+
+    .search-div-transparent .p-floatlabel:has(input:focus) label,
+    .search-div-transparent .p-floatlabel:has(input.p-filled) label,
+    .search-div-transparent .p-floatlabel.p-floatlabel-active label {
+        top: 0.45rem !important;
+        font-size: 0.72rem !important;
+    }
+
+    .clear-search-btn {
+        right: 10px;
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+
+    .p-datatable .p-datatable-thead > tr > th,
+    .p-datatable th.p-datatable-header-cell {
+        padding: 0.75rem 0.85rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .p-datatable .p-datatable-tbody > tr > td {
+        padding: 0.75rem 0.85rem !important;
+        font-size: 0.88rem !important;
+    }
+}

@@ -597,10 +597,6 @@ onBeforeUnmount(() => {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(255, 255, 255, 0.96) !important;
-  backdrop-filter: blur(4px) !important;
-  -webkit-backdrop-filter: blur(4px) !important;
-  border-radius: 14px;
 }
 
 html.dark .table-wrapper :deep(.p-datatable-mask),

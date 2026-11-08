@@ -131,7 +131,7 @@ const messages = {
         manage_remarques: "Fitantanana ireo Fanamarihana (Isaky ny fiteny)",
         manage_remarques_desc: "Afaka mampiditra fanamarihana araka izay tiana ianao. Hisy teboka hiseho eo ambanin'ny tabilao arakaraka ny fiteny fidina.",
         remarque_saved: "Voarakitra soa aman-tsara ny fanamarihana!",
-        anonymous_firstname: "Fanampiny tsy fantatra"
+        anonymous_firstname: "Fanampiny anonyme"
     }
 };
 

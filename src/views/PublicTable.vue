@@ -553,55 +553,94 @@ onBeforeUnmount(() => {
 /* ======================================================== */
 @media (max-width: 640px) {
   .clean-page-container {
-    padding: 0.75rem 1rem 2.5rem;
-    gap: 1.25rem;
+    padding: 0.75rem 0.85rem 2.5rem;
+    gap: 1.15rem;
   }
 
+  /* L'en-tête reste en ROW : Logo TOUT À GAUCHE et Somme TOUT À DROITE */
   .hero-top-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1.25rem;
-    padding: 0.25rem 0 0.5rem;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    width: 100%;
     min-height: auto;
+    padding: 0.25rem 0 0.5rem;
+    gap: 0.75rem;
   }
 
-  .stats-controls-side {
-    width: 100%;
+  /* Logo tout à gauche */
+  .logo-hero-side {
+    display: flex;
     align-items: center;
-    gap: 1rem;
+    justify-content: flex-start;
+    flex: 0 0 auto;
+    max-width: 46%;
+  }
+
+  .header-logo-hero {
+    height: 86px;
+    max-height: 94px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  /* Contrôles et Somme tout à droite */
+  .stats-controls-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    text-align: right;
+    flex: 1;
+    min-width: 0;
     padding: 0;
   }
 
   .topbar-controls {
-    width: 100%;
-    justify-content: flex-end;
-  }
-
-  .logo-hero-side {
-    justify-content: center;
-    width: 100%;
-  }
-
-  .header-logo-hero {
-    height: 105px;
-    max-height: 115px;
-  }
-
-  .total-compact-box {
+    display: flex;
     align-items: center;
-    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .ctrl-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.88rem;
+  }
+
+  :deep(.lang-switcher-wrapper) {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  /* Boîte somme tout à droite, compacte */
+  .total-compact-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
     width: 100%;
-    padding-top: 0;
-    margin-top: 0;
+    margin-top: auto;
+    padding-top: 0.25rem;
   }
 
   .total-label {
-    font-size: 0.78rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .total-amount {
-    font-size: 2.2rem;
+    font-size: clamp(1.3rem, 5.2vw, 1.85rem);
+    font-weight: 900;
+    line-height: 1.1;
+    white-space: nowrap;
   }
 
   .name-cell,

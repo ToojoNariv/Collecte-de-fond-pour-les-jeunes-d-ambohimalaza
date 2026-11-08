@@ -459,7 +459,7 @@ onBeforeUnmount(() => {
   justify-content: center;
   align-items: flex-end;
   text-align: right;
-  gap: 0.35rem; /* Distance considérablement réduite entre boutons et somme */
+  gap: 0.75rem; /* Léger espacement équilibré entre boutons et somme */
   flex: 0 0 auto;
   padding: 0;
 }
@@ -511,25 +511,25 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
-  margin-top: 0;
+  margin-top: 0.35rem; /* Léger margin avec les boutons au-dessus */
   padding-top: 0;
 }
 
 .total-label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.15rem;
 }
 
-/* Somme totale augmentée */
+/* Somme totale : taille légèrement réduite */
 .total-amount {
-  font-size: 3.5rem;
+  font-size: 2.85rem;
   font-weight: 900;
   letter-spacing: -0.025em;
-  line-height: 1.02;
+  line-height: 1.05;
   transition: color 0.2s ease;
   white-space: nowrap;
 }
@@ -783,16 +783,16 @@ body.dark .remarque-text,
   }
 
   .stats-controls-side {
-    gap: 0.3rem;
+    gap: 0.6rem;
   }
 
   .total-compact-box {
-    margin-top: 0;
+    margin-top: 0.25rem;
     padding-top: 0;
   }
 
   .total-amount {
-    font-size: 2.85rem;
+    font-size: 2.35rem;
   }
 
   .remarques-scroll-box {
@@ -838,14 +838,14 @@ body.dark .remarque-text,
     object-position: left center;
   }
 
-  /* Contrôles et Somme tout à droite : distance réduite considérablement */
+  /* Contrôles et Somme tout à droite : léger espacement équilibré */
   .stats-controls-side {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-end;
     text-align: right;
-    gap: 0.2rem; /* Espace très réduit entre boutons et somme */
+    gap: 0.45rem; /* Léger gap entre boutons et somme */
     flex: 0 0 auto;
     min-width: 0;
     padding: 0;
@@ -868,14 +868,14 @@ body.dark .remarque-text,
     height: 32px !important;
   }
 
-  /* Somme totale pour mobile : espace réduit */
+  /* Somme totale pour mobile : léger margin et taille légèrement réduite */
   .total-compact-box {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     text-align: right;
     width: 100%;
-    margin-top: 0;
+    margin-top: 0.2rem; /* Léger margin */
     padding-top: 0;
   }
 
@@ -889,8 +889,9 @@ body.dark .remarque-text,
     max-width: 100%;
   }
 
+  /* Taille du texte de la somme légèrement réduite sur mobile */
   .total-amount {
-    font-size: clamp(1.85rem, 6.8vw, 2.45rem);
+    font-size: clamp(1.55rem, 5.8vw, 2.05rem);
     font-weight: 900;
     line-height: 1.05;
     letter-spacing: -0.02em;

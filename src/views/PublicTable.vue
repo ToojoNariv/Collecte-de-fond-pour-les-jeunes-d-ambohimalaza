@@ -424,30 +424,34 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
 }
 
-/* 1. En-tête : Logo à gauche, Contrôles en haut à droite, Somme augmentée à droite */
+/* 1. En-tête : Logo à gauche (même hauteur que les boutons et montant réunis), Contrôles en haut à droite, Somme en dessous */
 .hero-top-header {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
   width: 100%;
-  padding: 0.15rem 0 0.35rem;
+  padding: 0;
   gap: 1.5rem;
   flex-shrink: 0;
 }
 
 .logo-hero-side {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
-  flex: 1;
+  align-self: stretch;
+  flex: 0 0 auto;
+  max-width: 52%;
 }
 
 .header-logo-hero {
-  height: 165px;
-  max-height: 180px;
+  height: 100%;
+  min-height: 165px;
+  max-height: 185px;
   width: auto;
   max-width: 100%;
   object-fit: contain;
+  object-position: left center;
   transition: filter 0.2s ease, height 0.2s ease;
   user-select: none;
 }
@@ -458,8 +462,9 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: flex-end;
   text-align: right;
+  align-self: stretch;
   flex-shrink: 0;
-  padding: 0.1rem 0;
+  padding: 0;
 }
 
 .topbar-controls {
@@ -627,11 +632,22 @@ body.dark .row-index-badge,
   word-break: keep-all;
 }
 
-/* 4. Section Remarques : scrollable sans scrollbar avec dégradé d'opacité 0 en bas */
+/* 4. Section Remarques (Fanamarihana) : couleur gris tête de colonnes, texte bien noir, scrollable sans scrollbar avec dégradé opacité 0 */
 .remarques-section {
   flex-shrink: 0;
-  padding: 0.2rem 0.25rem 0.4rem;
+  background: #efefef;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
+  padding: 0.65rem 1rem 0.55rem;
   margin-top: 0;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+html.dark .remarques-section,
+body.dark .remarques-section,
+.dark .remarques-section {
+  background: #202020 !important;
+  border-color: #2e2e2e !important;
 }
 
 .remarques-header {
@@ -640,13 +656,20 @@ body.dark .row-index-badge,
 
 .remarques-heading {
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  color: #000000 !important;
+}
+
+html.dark .remarques-heading,
+body.dark .remarques-heading,
+.dark .remarques-heading {
+  color: #ffffff !important;
 }
 
 .remarques-scroll-box {
-  max-height: 80px;
+  max-height: 85px;
   overflow-y: auto;
   position: relative;
   /* Scrollbar masquée */
@@ -679,16 +702,39 @@ body.dark .row-index-badge,
   font-size: 0.92rem;
   line-height: 1.45;
   word-break: break-word;
+  color: #000000 !important;
+}
+
+html.dark .remarque-point,
+body.dark .remarque-point,
+.dark .remarque-point {
+  color: #ffffff !important;
 }
 
 .bullet-dot {
   font-size: 1.15rem;
   line-height: 1.3;
   flex-shrink: 0;
+  color: #000000 !important;
+}
+
+html.dark .bullet-dot,
+body.dark .bullet-dot,
+.dark .bullet-dot {
+  color: #ffffff !important;
 }
 
 .remarque-text {
   flex: 1;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+html.dark .remarque-text,
+body.dark .remarque-text,
+.dark .remarque-text {
+  color: #ffffff !important;
+  font-weight: 500;
 }
 
 /* Empty & Loading states */
@@ -731,8 +777,9 @@ body.dark .row-index-badge,
   }
 
   .header-logo-hero {
-    height: 135px;
-    max-height: 145px;
+    height: 100%;
+    min-height: 145px;
+    max-height: 160px;
   }
 
   .total-amount {
@@ -740,7 +787,7 @@ body.dark .row-index-badge,
   }
 
   .remarques-scroll-box {
-    max-height: 72px;
+    max-height: 80px;
   }
 }
 
@@ -749,11 +796,11 @@ body.dark .row-index-badge,
 /* ======================================================== */
 @media (max-width: 640px) {
   .clean-page-container {
-    padding: 0.5rem 0.75rem 0.4rem;
-    gap: 0.55rem;
+    padding: 0.45rem 0.65rem 0.35rem;
+    gap: 0.5rem;
   }
 
-  /* L'en-tête reste en ligne : Logo TOUT À GAUCHE et Somme TOUT À DROITE */
+  /* L'en-tête en ligne : Logo TOUT À GAUCHE et Somme TOUT À DROITE */
   .hero-top-header {
     display: flex;
     flex-direction: row;
@@ -761,25 +808,28 @@ body.dark .row-index-badge,
     justify-content: space-between;
     width: 100%;
     min-height: auto;
-    padding: 0.15rem 0 0.3rem;
+    padding: 0;
     gap: 0.65rem;
   }
 
-  /* Logo encore augmenté pour la version mobile */
+  /* Logo agrandi pour avoir la MÊME HAUTEUR que le bloc de droite (boutons + montant total) */
   .logo-hero-side {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: flex-start;
+    align-self: stretch;
     flex: 0 0 auto;
-    max-width: 48%;
+    max-width: 50%;
   }
 
   .header-logo-hero {
-    height: 108px;
-    max-height: 118px;
+    height: 100%;
+    min-height: 124px;
+    max-height: 135px;
     width: auto;
     max-width: 100%;
     object-fit: contain;
+    object-position: left center;
   }
 
   /* Contrôles et Somme tout à droite */
@@ -789,6 +839,7 @@ body.dark .row-index-badge,
     justify-content: space-between;
     align-items: flex-end;
     text-align: right;
+    align-self: stretch;
     flex: 1;
     min-width: 0;
     padding: 0;
@@ -811,7 +862,7 @@ body.dark .row-index-badge,
     height: 32px !important;
   }
 
-  /* Somme totale augmentée pour mobile */
+  /* Somme totale pour mobile */
   .total-compact-box {
     display: flex;
     flex-direction: column;
@@ -819,8 +870,7 @@ body.dark .row-index-badge,
     text-align: right;
     width: 100%;
     margin-top: auto;
-    margin-top: 0;
-    padding-top: 0.2rem;
+    padding-top: 0.15rem;
   }
 
   .total-label {
@@ -834,11 +884,19 @@ body.dark .row-index-badge,
   }
 
   .total-amount {
-    font-size: clamp(1.85rem, 6.8vw, 2.45rem);
+    font-size: clamp(1.8rem, 6.5vw, 2.35rem);
     font-weight: 900;
     line-height: 1.05;
     letter-spacing: -0.02em;
     white-space: nowrap;
+  }
+
+  /* Réduction de la hauteur du tableau sur mobile */
+  .table-wrapper {
+    flex: 0 1 auto;
+    height: 38dvh;
+    max-height: 38dvh;
+    min-height: 150px;
   }
 
   .name-cell,
@@ -851,20 +909,22 @@ body.dark .row-index-badge,
     font-size: 0.84rem;
   }
 
-  /* Remarques sur mobile : compact et scrollable sans barre avec dégradé */
+  /* Remarques (Fanamarihana) sur mobile : fond gris, texte bien noir, scrollable avec dégradé */
   .remarques-section {
-    padding: 0.15rem 0.15rem 0.25rem;
+    padding: 0.55rem 0.85rem 0.45rem;
+    border-radius: 12px;
   }
 
   .remarques-heading {
-    font-size: 0.84rem;
-    margin-bottom: 0.2rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
   }
 
   .remarques-scroll-box {
-    max-height: 62px;
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
+    max-height: 75px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 18px), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 18px), transparent 100%);
   }
 
   .remarque-point {

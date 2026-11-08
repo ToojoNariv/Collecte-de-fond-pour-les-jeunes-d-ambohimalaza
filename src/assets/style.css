@@ -116,17 +116,25 @@ body.dark .row-index-badge,
     white-space: nowrap !important;
 }
 
+.remarques-section {
+    background: #efefef !important;
+    border-radius: 14px !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
 .remarques-heading {
-    color: #555555;
+    color: #000000 !important;
+    font-weight: 800 !important;
 }
 
 .remarque-point,
 .remarque-text {
-    color: #1f1f1f;
+    color: #000000 !important;
+    font-weight: 600 !important;
 }
 
 .bullet-dot {
-    color: #737373;
+    color: #000000 !important;
 }
 
 .empty-title {
@@ -182,10 +190,17 @@ body.dark .somme-cell,
     font-weight: 800 !important;
 }
 
+html.dark .remarques-section,
+body.dark .remarques-section,
+.dark .remarques-section {
+    background: #202020 !important;
+    border-color: #2e2e2e !important;
+}
+
 html.dark .remarques-heading,
 body.dark .remarques-heading,
 .dark .remarques-heading {
-    color: #e5e5e5 !important;
+    color: #ffffff !important;
 }
 
 html.dark .remarque-point,
@@ -194,13 +209,13 @@ body.dark .remarque-point,
 html.dark .remarque-text,
 body.dark .remarque-text,
 .dark .remarque-text {
-    color: #f3f4f6 !important;
+    color: #ffffff !important;
 }
 
 html.dark .bullet-dot,
 body.dark .bullet-dot,
 .dark .bullet-dot {
-    color: #a3a3a3 !important;
+    color: #ffffff !important;
 }
 
 html.dark .empty-title,

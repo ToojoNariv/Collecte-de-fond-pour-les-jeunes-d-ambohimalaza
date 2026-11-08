@@ -87,7 +87,7 @@ const messages = {
         manage_remarques: "Remarks Management (By language)",
         manage_remarques_desc: "Add and update as many remarks as needed. They appear as bullet points below the table in the chosen language.",
         remarque_saved: "Remark recorded successfully!",
-        anonymous_firstname: "Prénom anonyme"
+        anonymous_firstname: "Anonymous"
     },
     mg: {
         total_collected: "Vola Voaangona",
@@ -131,7 +131,7 @@ const messages = {
         manage_remarques: "Fitantanana ireo Fanamarihana (Isaky ny fiteny)",
         manage_remarques_desc: "Afaka mampiditra fanamarihana araka izay tiana ianao. Hisy teboka hiseho eo ambanin'ny tabilao arakaraka ny fiteny fidina.",
         remarque_saved: "Voarakitra soa aman-tsara ny fanamarihana!",
-        anonymous_firstname: "Prénom anonyme"
+        anonymous_firstname: "Fanampiny tsy fantatra"
     }
 };
 

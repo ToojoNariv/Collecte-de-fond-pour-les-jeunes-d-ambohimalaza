@@ -80,7 +80,7 @@
         class="p-datatable-flex-scroll"
       >
         <template #empty>
-          <div class="empty-state">
+          <div class="empty-state" v-if="!loading">
             <i class="pi pi-search-minus empty-icon"></i>
             <p class="empty-title">{{ $t('empty_title') }}</p>
             <p class="empty-desc" v-if="value2">
@@ -94,8 +94,8 @@
 
         <template #loading>
           <div class="loading-state">
-            <i class="pi pi-spin pi-spinner text-2xl"></i>
-            <span>{{ $t('loading') }}</span>
+            <i class="pi pi-spin pi-spinner loading-spinner-icon"></i>
+            <span class="loading-text">{{ $t('loading') }}</span>
           </div>
         </template>
 
@@ -165,7 +165,7 @@ import { ProductService } from '@/service/ProductService';
 import LangSwitcher from '@/components/LangSwitcher.vue';
 import logoSvg from '@/assets/logo.svg';
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 // Variables du template
 const products = ref([]);
@@ -353,7 +353,8 @@ const filteredProducts = computed(() => {
 
   return products.value.filter((item) => {
     const nom = (item.nom || '').toLowerCase();
-    const prenom = (item.prenom || 'Prénom anonyme').toLowerCase();
+    const anonFirstname = (t('anonymous_firstname') || 'Prénom anonyme').toLowerCase();
+    const prenom = (item.prenom || anonFirstname).toLowerCase();
     const contactRaw = (item.contact || '').toLowerCase();
     const contactCleaned = contactRaw.replace(/\s+/g, '');
     const contactMasked = formatContact(item.contact).toLowerCase();
@@ -560,6 +561,7 @@ onBeforeUnmount(() => {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 14px;
+  position: relative;
 }
 
 .table-wrapper :deep(.p-datatable) {
@@ -567,6 +569,7 @@ onBeforeUnmount(() => {
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
+  position: relative !important;
 }
 
 .table-wrapper :deep(.p-datatable-table-container) {
@@ -575,6 +578,34 @@ onBeforeUnmount(() => {
   height: 100% !important;
   overflow-y: auto !important;
   overflow-x: auto !important;
+  position: relative !important;
+}
+
+/* Overlay de chargement : empêche totalement la superposition avec les résultats et centre l'indicateur */
+.table-wrapper :deep(.p-datatable-mask),
+.table-wrapper :deep(.p-overlay-mask) {
+  position: absolute !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 100 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border-radius: 14px;
+}
+
+html.dark .table-wrapper :deep(.p-datatable-mask),
+body.dark .table-wrapper :deep(.p-datatable-mask),
+.dark .table-wrapper :deep(.p-datatable-mask) {
+  background: rgba(18, 18, 18, 0.96) !important;
 }
 
 .index-col {
@@ -772,12 +803,50 @@ body.dark .remarque-text,
 }
 
 .loading-state {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 2rem;
+  padding: 0.95rem 1.6rem;
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
   font-weight: 600;
+  font-size: 0.92rem;
+  line-height: 1.4 !important;
+  color: #171717 !important;
+  max-width: 90%;
+  margin: auto;
+}
+
+.loading-spinner-icon {
+  font-size: 1.25rem !important;
+  color: #171717 !important;
+  display: inline-block;
+  line-height: 1 !important;
+  flex-shrink: 0;
+}
+
+.loading-text {
+  line-height: 1.4 !important;
+  margin: 0;
+  display: inline-block;
+}
+
+html.dark .loading-state,
+body.dark .loading-state,
+.dark .loading-state {
+  background: #222222 !important;
+  border-color: #333333 !important;
+  color: #f3f3f3 !important;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5) !important;
+}
+
+html.dark .loading-spinner-icon,
+body.dark .loading-spinner-icon,
+.dark .loading-spinner-icon {
+  color: #ffffff !important;
 }
 
 /* ======================================================== */

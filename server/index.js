@@ -17,6 +17,14 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
+// Assurer la connexion MongoDB pour chaque requête API (idéal pour Vercel Serverless)
+app.use(async (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+        await connectDB();
+    }
+    next();
+});
+
 // Identifiants administrateur (lus strictement depuis le fichier .env)
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
@@ -272,6 +280,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Serveur backend démarré sur http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`🚀 Serveur backend démarré sur http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

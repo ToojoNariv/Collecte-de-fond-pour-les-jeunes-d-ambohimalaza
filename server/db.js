@@ -1,21 +1,27 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const mongoUri = process.env.MONGODB_URL;
-
-if (!mongoUri) {
-    console.error('❌ Erreur critique : La variable MONGODB_URL n\'est pas définie dans votre fichier .env');
-    console.error('👉 Veuillez créer un fichier .env à la racine avec : MONGODB_URL=mongodb+srv://...');
-    process.exit(1);
-}
+let isConnected = false;
 
 async function connectDB() {
+    if (isConnected || mongoose.connection.readyState === 1) {
+        return;
+    }
+
+    const mongoUri = process.env.MONGODB_URL;
+    if (!mongoUri) {
+        console.error('❌ Erreur: MONGODB_URL non défini dans les variables d\'environnement.');
+        return;
+    }
+
     try {
-        await mongoose.connect(mongoUri);
+        await mongoose.connect(mongoUri, {
+            serverSelectionTimeoutMS: 5000
+        });
+        isConnected = true;
         console.log('✅ Connecté avec succès à MongoDB');
     } catch (err) {
         console.error('❌ Erreur de connexion MongoDB:', err.message);
-        process.exit(1);
     }
 }
 

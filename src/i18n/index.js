@@ -90,7 +90,7 @@ const messages = {
         anonymous_firstname: "Prénom anonyme"
     },
     mg: {
-        total_collected: "Fitambaran'ny Vola Voaangona",
+        total_collected: "Vola Voaangona",
         search_placeholder: "Hitady amin'ny anarana, fanampiny na laharana finday...",
         col_nom: "Anarana",
         col_prenom: "Fanampin'anarana",

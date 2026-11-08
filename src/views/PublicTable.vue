@@ -387,6 +387,14 @@ watch(value2, (newVal) => {
 });
 
 onMounted(() => {
+  const savedTheme = localStorage.getItem('collecte_theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+    document.body.classList.remove('dark');
+  }
   checkDarkMode();
   loadData();
   loadRemarques();

@@ -15,6 +15,19 @@
         dummy.id = 'p-license-host';
         dummy.style.cssText = 'display:none!important;visibility:hidden!important;position:absolute!important;width:0!important;height:0!important;pointer-events:none!important;';
         document.documentElement.appendChild(dummy);
+
+        // Mode clair (light mode) par défaut
+        try {
+          var savedTheme = localStorage.getItem('collecte_theme');
+          if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+            if (!savedTheme) {
+              localStorage.setItem('collecte_theme', 'light');
+            }
+          }
+        } catch (e) {}
       })();
     </script>
   </head>

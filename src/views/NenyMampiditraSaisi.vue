@@ -218,15 +218,24 @@
                                 <span class="date-cell">{{ formatDate(slotProps.data.createdAt) }}</span>
                             </template>
                         </Column>
-                        <Column :header="$t('actions')" style="width: 80px; text-align: center;">
+                        <Column :header="$t('actions')" style="width: 100px; text-align: center;">
                             <template #body="slotProps">
-                                <button 
-                                    @click="deleteDonation(slotProps.data._id)" 
-                                    class="delete-action-btn" 
-                                    title="Supprimer"
-                                >
-                                    <i class="pi pi-trash"></i>
-                                </button>
+                                <div class="actions-group">
+                                    <button 
+                                        @click="openEditDonation(slotProps.data)" 
+                                        class="edit-action-btn" 
+                                        :title="$i18n.locale === 'mg' ? 'Hanova' : ($i18n.locale === 'en' ? 'Edit' : 'Modifier')"
+                                    >
+                                        <i class="pi pi-pencil"></i>
+                                    </button>
+                                    <button 
+                                        @click="deleteDonation(slotProps.data._id)" 
+                                        class="delete-action-btn" 
+                                        :title="$i18n.locale === 'mg' ? 'Hamafa' : ($i18n.locale === 'en' ? 'Delete' : 'Supprimer')"
+                                    >
+                                        <i class="pi pi-trash"></i>
+                                    </button>
+                                </div>
                             </template>
                         </Column>
                     </DataTable>
@@ -314,26 +323,225 @@
                                 <span class="remarque-table-text">{{ slotProps.data.texte_en || '-' }}</span>
                             </template>
                         </Column>
-                        <Column :header="$t('actions')" style="width: 4%; text-align: center;">
+                        <Column :header="$t('actions')" style="width: 100px; text-align: center;">
                             <template #body="slotProps">
-                                <button 
-                                    @click="deleteRemarque(slotProps.data._id)" 
-                                    class="delete-action-btn" 
-                                    title="Supprimer"
-                                >
-                                    <i class="pi pi-trash"></i>
-                                </button>
+                                <div class="actions-group">
+                                    <button 
+                                        @click="openEditRemarque(slotProps.data)" 
+                                        class="edit-action-btn" 
+                                        :title="$i18n.locale === 'mg' ? 'Hanova' : ($i18n.locale === 'en' ? 'Edit' : 'Modifier')"
+                                    >
+                                        <i class="pi pi-pencil"></i>
+                                    </button>
+                                    <button 
+                                        @click="deleteRemarque(slotProps.data._id)" 
+                                        class="delete-action-btn" 
+                                        :title="$i18n.locale === 'mg' ? 'Hamafa' : ($i18n.locale === 'en' ? 'Delete' : 'Supprimer')"
+                                    >
+                                        <i class="pi pi-trash"></i>
+                                    </button>
+                                </div>
                             </template>
                         </Column>
                     </DataTable>
                 </div>
             </div>
         </div>
+
+        <!-- MODALS D'ÉDITION AVEC TELEPORT POUR UN RENDU PARFAIT -->
+        <Teleport to="body">
+            <!-- Modal Modification Don -->
+            <div 
+                v-if="isEditDonationModalOpen" 
+                class="modal-backdrop" 
+                @click.self="closeEditDonationModal"
+            >
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div class="modal-title-box">
+                            <span class="modal-icon-badge">
+                                <i class="pi pi-pencil"></i>
+                            </span>
+                            <div>
+                                <h3 class="modal-title">
+                                    {{ $i18n.locale === 'mg' ? 'Hanova ny fandraisana anjara' : ($i18n.locale === 'en' ? 'Edit Contribution' : 'Modifier la contribution') }}
+                                </h3>
+                                <p class="modal-subtitle">
+                                    {{ $i18n.locale === 'mg' ? 'Ovay eto ny mombamomba ny mpandray anjara' : ($i18n.locale === 'en' ? 'Update donor details' : 'Modifiez les informations du donateur') }}
+                                </p>
+                            </div>
+                        </div>
+                        <button 
+                            @click="closeEditDonationModal" 
+                            class="modal-close-btn" 
+                            type="button" 
+                            aria-label="Fermer"
+                        >
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+
+                    <form @submit.prevent="handleUpdateDonation" class="modal-body">
+                        <div class="modal-form-grid">
+                            <!-- Nom -->
+                            <div class="form-field">
+                                <label class="required-label">{{ $t('col_nom') }}</label>
+                                <InputText 
+                                    v-model="editDonationForm.nom" 
+                                    :placeholder="$t('col_nom')" 
+                                    class="w-full text-uppercase-input" 
+                                    required 
+                                />
+                            </div>
+
+                            <!-- Prénom -->
+                            <div class="form-field">
+                                <label>
+                                    {{ $t('col_prenom') }} 
+                                    <span class="optional-hint">({{ $i18n.locale === 'mg' ? 'tsy voatery' : 'facultatif' }})</span>
+                                </label>
+                                <InputText 
+                                    v-model="editDonationForm.prenom" 
+                                    :placeholder="$i18n.locale === 'mg' ? 'Ohatra: Marie' : 'Ex: Marie'" 
+                                    class="w-full" 
+                                />
+                            </div>
+
+                            <!-- Contact -->
+                            <div class="form-field">
+                                <label class="required-label">{{ $t('col_contact') }}</label>
+                                <InputText 
+                                    v-model="editDonationForm.contact" 
+                                    placeholder="034 00 000 00 / +261..." 
+                                    class="w-full" 
+                                    required 
+                                />
+                            </div>
+
+                            <!-- Somme -->
+                            <div class="form-field">
+                                <label class="required-label">{{ $t('col_somme') }} (Ar)</label>
+                                <InputNumber 
+                                    v-model="editDonationForm.somme" 
+                                    mode="decimal" 
+                                    :min="0"
+                                    suffix=" Ar" 
+                                    class="w-full" 
+                                    required 
+                                />
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button 
+                                type="button" 
+                                @click="closeEditDonationModal" 
+                                class="modal-cancel-btn"
+                            >
+                                {{ $i18n.locale === 'mg' ? 'Hanafoana' : ($i18n.locale === 'en' ? 'Cancel' : 'Annuler') }}
+                            </button>
+                            <Button 
+                                type="submit" 
+                                :label="$i18n.locale === 'mg' ? 'Mandraikitra' : ($i18n.locale === 'en' ? 'Save changes' : 'Enregistrer')" 
+                                icon="pi pi-check" 
+                                :loading="editDonationLoading" 
+                                class="modal-submit-btn" 
+                            />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Modification Remarque -->
+            <div 
+                v-if="isEditRemarqueModalOpen" 
+                class="modal-backdrop" 
+                @click.self="closeEditRemarqueModal"
+            >
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <div class="modal-title-box">
+                            <span class="modal-icon-badge">
+                                <i class="pi pi-pencil"></i>
+                            </span>
+                            <div>
+                                <h3 class="modal-title">
+                                    {{ $i18n.locale === 'mg' ? 'Hanova ny fanamarihana' : ($i18n.locale === 'en' ? 'Edit Remark' : 'Modifier la remarque') }}
+                                </h3>
+                                <p class="modal-subtitle">
+                                    {{ $i18n.locale === 'mg' ? 'Ovay eto ny soratra araka ny fiteny' : ($i18n.locale === 'en' ? 'Update text in each language' : 'Modifiez le texte dans chaque langue') }}
+                                </p>
+                            </div>
+                        </div>
+                        <button 
+                            @click="closeEditRemarqueModal" 
+                            class="modal-close-btn" 
+                            type="button" 
+                            aria-label="Fermer"
+                        >
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+
+                    <form @submit.prevent="handleUpdateRemarque" class="modal-body">
+                        <div class="modal-form-grid-stacked">
+                            <!-- Remarque MG -->
+                            <div class="form-field">
+                                <label class="required-label">{{ $t('remarque_mg') }}</label>
+                                <InputText 
+                                    v-model="editRemarqueForm.texte_mg" 
+                                    placeholder="Fanamarihana amin'ny teny Malagasy..." 
+                                    class="w-full" 
+                                    required 
+                                />
+                            </div>
+
+                            <!-- Remarque FR -->
+                            <div class="form-field">
+                                <label>{{ $t('remarque_fr') }}</label>
+                                <InputText 
+                                    v-model="editRemarqueForm.texte_fr" 
+                                    placeholder="Remarque en Français..." 
+                                    class="w-full" 
+                                />
+                            </div>
+
+                            <!-- Remarque EN -->
+                            <div class="form-field">
+                                <label>{{ $t('remarque_en') }}</label>
+                                <InputText 
+                                    v-model="editRemarqueForm.texte_en" 
+                                    placeholder="Remark in English..." 
+                                    class="w-full" 
+                                />
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button 
+                                type="button" 
+                                @click="closeEditRemarqueModal" 
+                                class="modal-cancel-btn"
+                            >
+                                {{ $i18n.locale === 'mg' ? 'Hanafoana' : ($i18n.locale === 'en' ? 'Cancel' : 'Annuler') }}
+                            </button>
+                            <Button 
+                                type="submit" 
+                                :label="$i18n.locale === 'mg' ? 'Mandraikitra' : ($i18n.locale === 'en' ? 'Save changes' : 'Enregistrer')" 
+                                icon="pi pi-check" 
+                                :loading="editRemarqueLoading" 
+                                class="modal-submit-btn" 
+                            />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </Teleport>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
 import { DonationService } from '@/service/DonationService';
@@ -586,8 +794,143 @@ const resetForm = () => {
     donationForm.somme = null;
 };
 
+// --- MODIFICATION D'UN DON ---
+const isEditDonationModalOpen = ref(false);
+const editDonationLoading = ref(false);
+const editDonationForm = reactive({
+    _id: '',
+    nom: '',
+    prenom: '',
+    contact: '',
+    somme: null
+});
+
+const openEditDonation = (donation) => {
+    editDonationForm._id = donation._id;
+    editDonationForm.nom = donation.nom || '';
+    editDonationForm.prenom = donation.prenom || '';
+    editDonationForm.contact = donation.contact || '';
+    editDonationForm.somme = donation.somme !== undefined && donation.somme !== null ? Number(donation.somme) : 0;
+    isEditDonationModalOpen.value = true;
+};
+
+const closeEditDonationModal = () => {
+    isEditDonationModalOpen.value = false;
+};
+
+const handleUpdateDonation = async () => {
+    if (!editDonationForm.nom || !editDonationForm.contact || editDonationForm.somme === null) {
+        toast.add({
+            severity: 'warn',
+            summary: 'Attention',
+            detail: t('fill_required'),
+            life: 3000
+        });
+        return;
+    }
+
+    editDonationLoading.value = true;
+    try {
+        await DonationService.updateDonation(editDonationForm._id, {
+            nom: editDonationForm.nom.trim(),
+            prenom: editDonationForm.prenom ? editDonationForm.prenom.trim() : '',
+            contact: editDonationForm.contact.trim(),
+            somme: Number(editDonationForm.somme)
+        });
+
+        toast.add({
+            severity: 'success',
+            summary: 'OK',
+            detail: t('donation_saved') || 'Contribution modifiée avec succès !',
+            life: 3500
+        });
+
+        closeEditDonationModal();
+        loadAdminDonations();
+    } catch (err) {
+        toast.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: err.response?.data?.message || 'Erreur lors de la modification.',
+            life: 3500
+        });
+    } finally {
+        editDonationLoading.value = false;
+    }
+};
+
+// --- MODIFICATION D'UNE REMARQUE ---
+const isEditRemarqueModalOpen = ref(false);
+const editRemarqueLoading = ref(false);
+const editRemarqueForm = reactive({
+    _id: '',
+    texte_mg: '',
+    texte_fr: '',
+    texte_en: ''
+});
+
+const openEditRemarque = (remarque) => {
+    editRemarqueForm._id = remarque._id;
+    editRemarqueForm.texte_mg = remarque.texte_mg || '';
+    editRemarqueForm.texte_fr = remarque.texte_fr || '';
+    editRemarqueForm.texte_en = remarque.texte_en || '';
+    isEditRemarqueModalOpen.value = true;
+};
+
+const closeEditRemarqueModal = () => {
+    isEditRemarqueModalOpen.value = false;
+};
+
+const handleUpdateRemarque = async () => {
+    if (!editRemarqueForm.texte_mg && !editRemarqueForm.texte_fr && !editRemarqueForm.texte_en) {
+        toast.add({
+            severity: 'warn',
+            summary: 'Attention',
+            detail: t('fill_required'),
+            life: 3000
+        });
+        return;
+    }
+
+    editRemarqueLoading.value = true;
+    try {
+        await DonationService.updateRemarque(editRemarqueForm._id, {
+            texte_mg: editRemarqueForm.texte_mg ? editRemarqueForm.texte_mg.trim() : '',
+            texte_fr: editRemarqueForm.texte_fr ? editRemarqueForm.texte_fr.trim() : '',
+            texte_en: editRemarqueForm.texte_en ? editRemarqueForm.texte_en.trim() : ''
+        });
+
+        toast.add({
+            severity: 'success',
+            summary: 'OK',
+            detail: t('remarque_saved') || 'Remarque modifiée avec succès !',
+            life: 3000
+        });
+
+        closeEditRemarqueModal();
+        loadAdminRemarques();
+    } catch (err) {
+        toast.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Erreur lors de la modification de la remarque.',
+            life: 3000
+        });
+    } finally {
+        editRemarqueLoading.value = false;
+    }
+};
+
+const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+        if (isEditDonationModalOpen.value) closeEditDonationModal();
+        if (isEditRemarqueModalOpen.value) closeEditRemarqueModal();
+    }
+};
+
 // Vérifier session existante au chargement
 onMounted(() => {
+    window.addEventListener('keydown', handleKeyDown);
     const savedToken = localStorage.getItem('collecte_auth_token');
     const savedUser = localStorage.getItem('collecte_auth_user');
     if (savedToken && savedUser) {
@@ -600,6 +943,10 @@ onMounted(() => {
             localStorage.removeItem('collecte_auth_token');
         }
     }
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleKeyDown);
 });
 </script>
 
@@ -1056,6 +1403,42 @@ onMounted(() => {
     color: #ffffff;
 }
 
+.actions-group {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.edit-action-btn {
+    background: #efefef;
+    border: none;
+    color: #555555;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-action-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+:global(html.dark) .edit-action-btn {
+    background: #242424;
+    color: #cccccc;
+}
+
+:global(html.dark) .edit-action-btn:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
 .delete-action-btn {
     background: #efefef;
     border: none;
@@ -1083,6 +1466,229 @@ onMounted(() => {
 :global(html.dark) .delete-action-btn:hover {
     background: #ffffff;
     color: #000000;
+}
+
+/* --- MODALS DE MODIFICATION --- */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.48);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeInModal 0.18s ease-out;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.18);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: scaleInModal 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleInModal {
+    from { transform: scale(0.96); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+:global(html.dark) .modal-card {
+    background: #181818;
+    border-color: #2e2e2e;
+    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.65);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #efefef;
+}
+
+:global(html.dark) .modal-header {
+    border-color: #262626;
+}
+
+.modal-title-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-icon-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #000000;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+:global(html.dark) .modal-icon-badge {
+    background: #ffffff;
+    color: #000000;
+}
+
+.modal-title {
+    font-size: 1.12rem;
+    font-weight: 800;
+    color: #111111;
+    margin: 0;
+    line-height: 1.2;
+}
+
+:global(html.dark) .modal-title {
+    color: #ffffff;
+}
+
+.modal-subtitle {
+    font-size: 0.8rem;
+    color: #737373;
+    margin-top: 0.15rem;
+}
+
+:global(html.dark) .modal-subtitle {
+    color: #999999;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    color: #737373;
+    font-size: 1.1rem;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.modal-close-btn:hover {
+    background: #efefef;
+    color: #111111;
+}
+
+:global(html.dark) .modal-close-btn:hover {
+    background: #242424;
+    color: #ffffff;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.modal-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.modal-form-grid-stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.optional-hint {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: #737373;
+}
+
+.text-uppercase-input {
+    text-transform: uppercase;
+}
+
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.15rem 1.5rem;
+    border-top: 1px solid #efefef;
+    background: #fafafa;
+}
+
+:global(html.dark) .modal-footer {
+    background: #141414;
+    border-color: #262626;
+}
+
+.modal-cancel-btn {
+    background: transparent;
+    border: 1px solid #d4d4d4;
+    color: #404040;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.6rem 1.15rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-cancel-btn:hover {
+    background: #f0f0f0;
+    color: #111111;
+}
+
+:global(html.dark) .modal-cancel-btn {
+    border-color: #3f3f46;
+    color: #a1a1aa;
+}
+
+:global(html.dark) .modal-cancel-btn:hover {
+    background: #27272a;
+    color: #ffffff;
+}
+
+.modal-submit-btn {
+    background: #000000 !important;
+    border: 1px solid #000000 !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    padding: 0.6rem 1.35rem !important;
+    border-radius: 10px !important;
+    transition: all 0.2s ease !important;
+}
+
+.modal-submit-btn:hover {
+    background: #222222 !important;
+    border-color: #222222 !important;
+}
+
+:global(html.dark) .modal-submit-btn {
+    background: #ffffff !important;
+    border: 1px solid #ffffff !important;
+    color: #000000 !important;
+}
+
+:global(html.dark) .modal-submit-btn:hover {
+    background: #e5e5e5 !important;
+    border-color: #e5e5e5 !important;
 }
 
 .refresh-table-btn {

@@ -424,10 +424,10 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
 }
 
-/* 1. En-tête : Logo à gauche (même hauteur que les boutons et montant réunis), Contrôles en haut à droite, Somme en dessous */
+/* 1. En-tête : Logo à gauche (agrandi), Contrôles en haut à droite, Somme juste en dessous avec distance considérablement réduite */
 .hero-top-header {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   padding: 0;
@@ -444,7 +444,7 @@ onBeforeUnmount(() => {
 }
 
 .header-logo-hero {
-  height: clamp(175px, 15vw, 210px);
+  height: clamp(195px, 17vw, 240px);
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -456,9 +456,10 @@ onBeforeUnmount(() => {
 .stats-controls-side {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-end;
   text-align: right;
+  gap: 0.35rem; /* Distance considérablement réduite entre boutons et somme */
   flex: 0 0 auto;
   padding: 0;
 }
@@ -510,8 +511,8 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
-  margin-top: auto;
-  padding-top: 0.5rem;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .total-label {
@@ -774,11 +775,20 @@ body.dark .remarque-text,
   }
 
   .header-logo-hero {
-    height: clamp(140px, 16vw, 165px);
+    height: clamp(155px, 18vw, 185px);
     width: auto;
     max-width: 100%;
     object-fit: contain;
     object-position: left center;
+  }
+
+  .stats-controls-side {
+    gap: 0.3rem;
+  }
+
+  .total-compact-box {
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .total-amount {
@@ -803,15 +813,15 @@ body.dark .remarque-text,
   .hero-top-header {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
     min-height: auto;
     padding: 0;
-    gap: 0.65rem;
+    gap: 0.5rem;
   }
 
-  /* Logo agrandi pour occuper toute la hauteur du bloc de droite (boutons + montant total) */
+  /* Logo encore agrandi pour la version mobile */
   .logo-hero-side {
     display: flex;
     align-items: center;
@@ -821,20 +831,21 @@ body.dark .remarque-text,
   }
 
   .header-logo-hero {
-    height: clamp(108px, 28vw, 126px);
+    height: clamp(126px, 33vw, 152px);
     width: auto;
     max-width: 100%;
     object-fit: contain;
     object-position: left center;
   }
 
-  /* Contrôles et Somme tout à droite : largeur compacte automatique */
+  /* Contrôles et Somme tout à droite : distance réduite considérablement */
   .stats-controls-side {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: flex-end;
     text-align: right;
+    gap: 0.2rem; /* Espace très réduit entre boutons et somme */
     flex: 0 0 auto;
     min-width: 0;
     padding: 0;
@@ -857,21 +868,21 @@ body.dark .remarque-text,
     height: 32px !important;
   }
 
-  /* Somme totale pour mobile */
+  /* Somme totale pour mobile : espace réduit */
   .total-compact-box {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     text-align: right;
     width: 100%;
-    margin-top: auto;
-    padding-top: 0.15rem;
+    margin-top: 0;
+    padding-top: 0;
   }
 
   .total-label {
     font-size: 0.68rem;
     letter-spacing: 0.04em;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.05rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -879,7 +890,7 @@ body.dark .remarque-text,
   }
 
   .total-amount {
-    font-size: clamp(1.8rem, 6.5vw, 2.35rem);
+    font-size: clamp(1.85rem, 6.8vw, 2.45rem);
     font-weight: 900;
     line-height: 1.05;
     letter-spacing: -0.02em;

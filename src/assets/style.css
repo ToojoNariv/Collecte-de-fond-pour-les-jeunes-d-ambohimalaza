@@ -133,6 +133,7 @@ body.dark .row-index-badge,
     font-weight: 600 !important;
 }
 
+.bullet-dash,
 .bullet-dot {
     color: #000000 !important;
 }
@@ -212,8 +213,11 @@ body.dark .remarque-text,
     color: #ffffff !important;
 }
 
+html.dark .bullet-dash,
 html.dark .bullet-dot,
+body.dark .bullet-dash,
 body.dark .bullet-dot,
+.dark .bullet-dash,
 .dark .bullet-dot {
     color: #ffffff !important;
 }

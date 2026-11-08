@@ -149,7 +149,7 @@
       <div class="remarques-scroll-box">
         <ul class="remarques-list">
           <li v-for="item in remarques" :key="item._id" class="remarque-point">
-            <span class="bullet-dot">•</span>
+            <span class="bullet-dash">–</span>
             <span class="remarque-text">{{ getRemarqueText(item) }}</span>
           </li>
         </ul>
@@ -635,7 +635,7 @@ body.dark .row-index-badge,
   background: #efefef !important;
   border-radius: 14px;
   border: none !important;
-  padding: 0.85rem 1.25rem 0.75rem;
+  padding: 1.15rem 1.25rem 0.75rem; /* Padding top augmenté */
   margin-top: 0;
   transition: background-color 0.2s ease;
 }
@@ -708,15 +708,21 @@ body.dark .remarque-point,
   color: #ffffff !important;
 }
 
+.bullet-dash,
 .bullet-dot {
-  font-size: 1.25rem;
-  line-height: 1.5;
+  font-size: 0.95rem;
+  line-height: 1.65; /* Aligné exactement sur la hauteur de ligne du texte */
+  font-weight: 700;
   flex-shrink: 0;
+  user-select: none;
   color: #000000 !important;
 }
 
+html.dark .bullet-dash,
 html.dark .bullet-dot,
+body.dark .bullet-dash,
 body.dark .bullet-dot,
+.dark .bullet-dash,
 .dark .bullet-dot {
   color: #ffffff !important;
 }
@@ -916,7 +922,7 @@ body.dark .remarque-text,
 
   /* Remarques (Fanamarihana) sur mobile : fond gris, sans bordure, texte bien noir, scrollable avec dégradé */
   .remarques-section {
-    padding: 0.65rem 0.95rem 0.55rem;
+    padding: 0.95rem 0.95rem 0.55rem; /* Padding top augmenté */
     border-radius: 14px;
     border: none !important;
   }
@@ -924,7 +930,7 @@ body.dark .remarque-text,
   .remarques-heading {
     font-size: 0.88rem;
     font-weight: 800;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.35rem;
   }
 
   .remarques-scroll-box {
@@ -936,6 +942,12 @@ body.dark .remarque-text,
   .remarque-point {
     font-size: 0.84rem;
     gap: 0.5rem;
+    line-height: 1.5;
+  }
+
+  .bullet-dash,
+  .bullet-dot {
+    font-size: 0.84rem;
     line-height: 1.5;
   }
 }

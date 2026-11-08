@@ -91,7 +91,7 @@ const messages = {
     },
     mg: {
         total_collected: "Vola Voaangona",
-        search_placeholder: "Hitady amin'ny anarana, fanampiny na laharana finday...",
+        search_placeholder: "Ny anarana, fanampiny na laharana findainao",
         col_nom: "Anarana",
         col_prenom: "Fanampin'anarana",
         col_contact: "Fifandraisana",

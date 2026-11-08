@@ -7,50 +7,47 @@ Application Web complète (Vue.js 3 + PrimeVue + Node.js / Express + MongoDB) po
 1. **Tableau des contributions en temps réel** :
    - Réalisé avec PrimeVue `DataTable` et `Column`.
    - Colonnes : **Nom**, **Prénom**, **Contact**, **Somme (en Ar)**.
-   - Statistiques globales dynamiques : Total collecté (en Ar), Nombre de donateurs, Don moyen.
+   - Statistiques globales dynamiques : Total collecté (en Ar).
 
 2. **Barre de recherche instantanée (PrimeVue FloatLabel & InputText)** :
    - Recherche réactive automatique : le tableau se met à jour immédiatement à la frappe.
-   - Supporte les recherches partielles, les chiffres/numéros, et les motifs de joker SQL/regex tels que `%nom%`, `%prenom%`, `%034%`, ou `%d%`.
+   - Supporte les recherches partielles, les chiffres/numéros, et les motifs de joker tels que `%nom%`, `%prenom%`, `%034%`, ou `%d%`.
 
 3. **Espace de saisie sécurisé (`/neny-mampiditra-saisi`)** :
-   - Protection par authentification :
-     - **Nom d'utilisateur** : `Raharindravoavy`
-     - **Mot de passe** : `74677647Tojo*`
+   - Protection par authentification administrateur via variables d'environnement (`ADMIN_USERNAME` et `ADMIN_PASSWORD`).
    - Formulaire dédié pour ajouter de nouveaux donateurs : Nom, Prénom, Contact, Somme (Ariary) et remarque optionnelle.
-   - Historique immédiat des saisies avec possibilité de supprimer une erreur.
+   - Gestion des remarques affichées au bas du tableau avec saisie multilingue (Français, Anglais, Malagasy).
 
 4. **Base de données MongoDB** :
-   - Connecté au cluster MongoDB Atlas `jammify` sur la collection `collectes_fond`.
+   - Connecté via Mongoose avec chaîne de connexion configurée dans `.env` (`MONGODB_URL`).
 
 ---
 
-## 🛠️ Démarrage rapide
+## 🛠️ Configuration & Démarrage
 
-### 1. Démarrer en mode développement (Serveur API + Vite Frontend)
+### 1. Variables d'environnement
+Créez un fichier `.env` à la racine du projet (copiez depuis `.env.example`) :
+```env
+MONGODB_URL=mongodb+srv://<votre_user>:<votre_mdp>@<votre_cluster>.mongodb.net/<votre_db>?retryWrites=true&w=majority
+PORT=5000
+ADMIN_USERNAME=votre_nom_utilisateur
+ADMIN_PASSWORD=votre_mot_de_passe
+```
+
+### 2. Démarrer en mode développement (Serveur API + Vite Frontend)
 ```bash
 npm run dev
 ```
 - Frontend Vite : [http://localhost:5173](http://localhost:5173)
 - Backend API Express : [http://localhost:5000](http://localhost:5000)
 
-### 2. Démarrer uniquement le backend
+### 3. Démarrer uniquement le backend
 ```bash
 npm run server
 ```
 
-### 3. Compiler et lancer en mode production
+### 4. Compiler et lancer en mode production
 ```bash
 npm run build
 npm start
 ```
-L'application compilée et l'API seront accessibles directement sur [http://localhost:5000](http://localhost:5000).
-
----
-
-## 🔐 Identifiants d'accès à la saisie
-
-- **Route** : `/neny-mampiditra-saisi`
-- **Nom d'utilisateur** : `Raharindravoavy`
-- **Mot de passe** : `74677647Tojo*`
-

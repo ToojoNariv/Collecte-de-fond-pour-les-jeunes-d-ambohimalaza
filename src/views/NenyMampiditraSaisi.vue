@@ -19,7 +19,7 @@
                             <InputText 
                                 id="username" 
                                 v-model="loginForm.username" 
-                                placeholder="Raharindravoavy" 
+                                :placeholder="$t('username')" 
                                 class="w-full"
                                 required 
                             />
@@ -340,7 +340,7 @@ const loginLoading = ref(false);
 const loginError = ref('');
 
 const loginForm = reactive({
-    username: 'Raharindravoavy',
+    username: '',
     password: ''
 });
 

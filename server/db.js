@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const mongoUri = process.env.MONGODB_URL || 'mongodb+srv://tojomanambina_db_user:gSj1WJeO4EdS0s0y@cluster0.urpk6nh.mongodb.net/jammify?retryWrites=true&w=majority&appName=Cluster0';
+const mongoUri = process.env.MONGODB_URL;
+
+if (!mongoUri) {
+    console.error('❌ Erreur critique : La variable MONGODB_URL n\'est pas définie dans votre fichier .env');
+    console.error('👉 Veuillez créer un fichier .env à la racine avec : MONGODB_URL=mongodb+srv://...');
+    process.exit(1);
+}
 
 async function connectDB() {
     try {
@@ -14,4 +20,3 @@ async function connectDB() {
 }
 
 module.exports = connectDB;
-

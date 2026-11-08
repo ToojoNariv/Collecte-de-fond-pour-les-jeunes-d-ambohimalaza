@@ -17,9 +17,13 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Identifiants administrateur
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'Raharindravoavy';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '74677647Tojo*';
+// Identifiants administrateur (lus strictement depuis le fichier .env)
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+    console.warn('⚠️ Attention: ADMIN_USERNAME ou ADMIN_PASSWORD n\'est pas défini dans le fichier .env');
+}
 
 // ---------------------- ROUTES API ---------------------- //
 

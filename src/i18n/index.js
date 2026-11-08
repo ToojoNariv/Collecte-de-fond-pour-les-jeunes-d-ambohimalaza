@@ -42,7 +42,8 @@ const messages = {
         save_remarque: "Enregistrer la remarque",
         manage_remarques: "Gestion des Remarques (Par langue)",
         manage_remarques_desc: "Ajoutez et modifiez autant de remarques que nécessaire. Elles s'affichent par points sous le tableau selon la langue choisie.",
-        remarque_saved: "Remarque enregistrée avec succès !"
+        remarque_saved: "Remarque enregistrée avec succès !",
+        anonymous_firstname: "Prénom anonyme"
     },
     en: {
         total_collected: "Total Collected",
@@ -85,7 +86,8 @@ const messages = {
         save_remarque: "Save remark",
         manage_remarques: "Remarks Management (By language)",
         manage_remarques_desc: "Add and update as many remarks as needed. They appear as bullet points below the table in the chosen language.",
-        remarque_saved: "Remark recorded successfully!"
+        remarque_saved: "Remark recorded successfully!",
+        anonymous_firstname: "Prénom anonyme"
     },
     mg: {
         total_collected: "Fitambaran'ny Vola Voaangona",
@@ -110,9 +112,9 @@ const messages = {
         password: "Tenimiafina",
         btn_login: "Hiditra",
         logout: "Hivoaka",
-        new_donation: "Fampidirana Fandraisana Anjara Vaovao",
+        new_donation: "Fampidirana Fandraisana Anjara",
         new_donation_desc: "Fenoy ny mombamomba ny mpanome.",
-        save_donation: "Hampiditra ny fandraisana anjara",
+        save_donation: "Hampiditra",
         reset: "Hamerina",
         recent_donations: "Ireo Fandraisana Anjara Farany",
         recent_donations_desc: "Zahao sy fehezo ireo fandraisana anjara voatahiry ao amin'ny tahirin-kevitra.",
@@ -128,16 +130,17 @@ const messages = {
         save_remarque: "Hirakitra ny fanamarihana",
         manage_remarques: "Fitantanana ireo Fanamarihana (Isaky ny fiteny)",
         manage_remarques_desc: "Afaka mampiditra fanamarihana araka izay tiana ianao. Hisy teboka hiseho eo ambanin'ny tabilao arakaraka ny fiteny fidina.",
-        remarque_saved: "Voarakitra soa aman-tsara ny fanamarihana!"
+        remarque_saved: "Voarakitra soa aman-tsara ny fanamarihana!",
+        anonymous_firstname: "Prénom anonyme"
     }
 };
 
-const savedLocale = localStorage.getItem('collecte_lang') || 'fr';
+const savedLocale = localStorage.getItem('collecte_lang') || 'mg';
 
 const i18n = createI18n({
     legacy: false,
     locale: savedLocale,
-    fallbackLocale: 'fr',
+    fallbackLocale: 'mg',
     messages
 });
 

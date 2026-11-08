@@ -85,6 +85,11 @@ body.dark {
     font-weight: 500;
 }
 
+.prenom-anonyme {
+    font-style: italic;
+    opacity: 0.8;
+}
+
 .contact-cell {
     color: #444444;
     font-weight: 500;

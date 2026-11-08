@@ -59,7 +59,7 @@
 
         <!-- 2. ESPACE DE SAISIE DE DONNÉES (Si connecté) -->
         <div v-else class="saisi-section">
-            <!-- Barre session admin -->
+            <!-- Barre session admin (Style monochrome épuré) -->
             <div class="admin-topbar">
                 <div class="admin-user-info">
                     <span class="user-avatar-tag">
@@ -82,12 +82,12 @@
                 </div>
             </div>
 
-            <!-- Formulaire de saisie d'un nouveau don -->
+            <!-- Formulaire de saisie d'un nouveau don (Sans champ remarque, prénom facultatif) -->
             <div class="form-card mt-6">
                 <div class="card-header-flex">
                     <div>
                         <h2 class="form-main-title">
-                            <i class="pi pi-plus-circle text-emerald"></i>
+                            <i class="pi pi-plus-circle"></i>
                             {{ $t('new_donation') }}
                         </h2>
                         <p class="form-main-subtitle">{{ $t('new_donation_desc') }}</p>
@@ -96,7 +96,7 @@
 
                 <form @submit.prevent="handleSaveDonation" class="saisi-form mt-4">
                     <div class="form-grid">
-                        <!-- Nom -->
+                        <!-- Nom (Obligatoire) -->
                         <div class="form-field">
                             <label for="don_nom" class="required-label">{{ $t('col_nom') }}</label>
                             <InputText 
@@ -108,19 +108,18 @@
                             />
                         </div>
 
-                        <!-- Prénom -->
+                        <!-- Prénom (Facultatif - sans étoile, sans required) -->
                         <div class="form-field">
-                            <label for="don_prenom" class="required-label">{{ $t('col_prenom') }}</label>
+                            <label for="don_prenom">{{ $t('col_prenom') }}</label>
                             <InputText 
                                 id="don_prenom" 
                                 v-model="donationForm.prenom" 
-                                placeholder="Ex: Jean Luc" 
+                                placeholder="Ex: Jean Luc (Optionnel)" 
                                 class="w-full"
-                                required 
                             />
                         </div>
 
-                        <!-- Contact -->
+                        <!-- Contact (Obligatoire) -->
                         <div class="form-field">
                             <label for="don_contact" class="required-label">{{ $t('col_contact') }}</label>
                             <InputText 
@@ -132,7 +131,7 @@
                             />
                         </div>
 
-                        <!-- Somme en Ariary -->
+                        <!-- Somme en Ariary (Obligatoire) -->
                         <div class="form-field">
                             <label for="don_somme" class="required-label">{{ $t('col_somme') }}</label>
                             <div class="somme-input-container">
@@ -147,17 +146,6 @@
                                 />
                                 <span class="somme-addon">Ar</span>
                             </div>
-                        </div>
-
-                        <!-- Remarque facultative -->
-                        <div class="form-field col-span-2">
-                            <label for="don_remarque">Remarque / Note</label>
-                            <InputText 
-                                id="don_remarque" 
-                                v-model="donationForm.remarque" 
-                                placeholder="Optionnel" 
-                                class="w-full"
-                            />
                         </div>
                     </div>
 
@@ -198,17 +186,31 @@
                         responsiveLayout="scroll"
                         stripedRows
                     >
-                        <Column field="nom" :header="$t('col_nom')" sortable></Column>
-                        <Column field="prenom" :header="$t('col_prenom')" sortable></Column>
-                        <Column field="contact" :header="$t('col_contact')" sortable></Column>
+                        <Column field="nom" :header="$t('col_nom')" sortable>
+                            <template #body="slotProps">
+                                <span class="name-cell">{{ slotProps.data.nom }}</span>
+                            </template>
+                        </Column>
+                        <Column field="prenom" :header="$t('col_prenom')" sortable>
+                            <template #body="slotProps">
+                                <span class="prenom-cell" :class="{ 'prenom-anonyme': !slotProps.data.prenom || !slotProps.data.prenom.trim() }">
+                                    {{ slotProps.data.prenom && slotProps.data.prenom.trim() ? slotProps.data.prenom : ($t('anonymous_firstname') || 'Prénom anonyme') }}
+                                </span>
+                            </template>
+                        </Column>
+                        <Column field="contact" :header="$t('col_contact')" sortable>
+                            <template #body="slotProps">
+                                <span class="contact-cell">{{ slotProps.data.contact }}</span>
+                            </template>
+                        </Column>
                         <Column field="somme" :header="$t('col_somme')" sortable>
                             <template #body="slotProps">
-                                <span class="somme-badge">{{ formatSomme(slotProps.data.somme) }}</span>
+                                <span class="somme-cell">{{ formatSomme(slotProps.data.somme) }}</span>
                             </template>
                         </Column>
                         <Column field="createdAt" :header="$t('date_saisie')" sortable>
                             <template #body="slotProps">
-                                <span class="text-sm text-slate-500">{{ formatDate(slotProps.data.createdAt) }}</span>
+                                <span class="date-cell">{{ formatDate(slotProps.data.createdAt) }}</span>
                             </template>
                         </Column>
                         <Column :header="$t('actions')" style="width: 80px; text-align: center;">
@@ -226,11 +228,12 @@
                 </div>
             </div>
 
-            <!-- NOUVELLE SECTION : GESTION DES REMARQUES PAR LANGUE -->
+            <!-- GESTION DES REMARQUES PAR LANGUE -->
             <div class="form-card mt-6">
                 <div class="card-header-flex">
                     <div>
                         <h2 class="form-main-title">
+                            <i class="pi pi-list"></i>
                             {{ $t('manage_remarques') }}
                         </h2>
                         <p class="form-main-subtitle">{{ $t('manage_remarques_desc') }}</p>
@@ -241,13 +244,23 @@
                 <form @submit.prevent="handleSaveRemarque" class="saisi-form mt-4">
                     <div class="form-grid">
                         <div class="form-field col-span-2">
-                            <label for="remarque_fr" class="required-label">{{ $t('remarque_fr') }}</label>
+                            <label for="remarque_mg" class="required-label">{{ $t('remarque_mg') }}</label>
+                            <InputText 
+                                id="remarque_mg" 
+                                v-model="remarqueForm.texte_mg" 
+                                placeholder="Ex: Natokana tanteraka hanampiana ireo tanora ny vola voaangona." 
+                                class="w-full"
+                                required 
+                            />
+                        </div>
+
+                        <div class="form-field">
+                            <label for="remarque_fr">{{ $t('remarque_fr') }}</label>
                             <InputText 
                                 id="remarque_fr" 
                                 v-model="remarqueForm.texte_fr" 
-                                placeholder="Ex: Les fonds sont entièrement reversés à la réhabilitation du centre." 
+                                placeholder="Ex: Les fonds sont entièrement reversés au soutien des jeunes." 
                                 class="w-full"
-                                required 
                             />
                         </div>
 
@@ -256,17 +269,7 @@
                             <InputText 
                                 id="remarque_en" 
                                 v-model="remarqueForm.texte_en" 
-                                placeholder="Ex: All funds are directly dedicated to the youth center." 
-                                class="w-full"
-                            />
-                        </div>
-
-                        <div class="form-field">
-                            <label for="remarque_mg">{{ $t('remarque_mg') }}</label>
-                            <InputText 
-                                id="remarque_mg" 
-                                v-model="remarqueForm.texte_mg" 
-                                placeholder="Ex: Natokana tanteraka hanampiana ireo tanora ny vola voaangona." 
+                                placeholder="Ex: All funds are dedicated to supporting the youth." 
                                 class="w-full"
                             />
                         </div>
@@ -291,22 +294,22 @@
                         responsiveLayout="scroll"
                         stripedRows
                     >
+                        <Column field="texte_mg" :header="$t('remarque_mg')" style="width: 32%;">
+                            <template #body="slotProps">
+                                <span class="remarque-table-text">{{ slotProps.data.texte_mg || '-' }}</span>
+                            </template>
+                        </Column>
                         <Column field="texte_fr" :header="$t('remarque_fr')" style="width: 32%;">
                             <template #body="slotProps">
-                                <span class="text-sm font-semibold">{{ slotProps.data.texte_fr }}</span>
+                                <span class="remarque-table-text">{{ slotProps.data.texte_fr || '-' }}</span>
                             </template>
                         </Column>
                         <Column field="texte_en" :header="$t('remarque_en')" style="width: 32%;">
                             <template #body="slotProps">
-                                <span class="text-sm text-slate-500">{{ slotProps.data.texte_en || '-' }}</span>
+                                <span class="remarque-table-text">{{ slotProps.data.texte_en || '-' }}</span>
                             </template>
                         </Column>
-                        <Column field="texte_mg" :header="$t('remarque_mg')" style="width: 32%;">
-                            <template #body="slotProps">
-                                <span class="text-sm text-slate-500">{{ slotProps.data.texte_mg || '-' }}</span>
-                            </template>
-                        </Column>
-                        <Column :header="$t('actions')" style="width: 4%;">
+                        <Column :header="$t('actions')" style="width: 4%; text-align: center;">
                             <template #body="slotProps">
                                 <button 
                                     @click="deleteRemarque(slotProps.data._id)" 
@@ -344,13 +347,12 @@ const loginForm = reactive({
     password: ''
 });
 
-// Formulaire de saisie d'un don
+// Formulaire de saisie d'un don (sans champ remarque, prénom facultatif)
 const donationForm = reactive({
     nom: '',
     prenom: '',
     contact: '',
-    somme: null,
-    remarque: ''
+    somme: null
 });
 const saveLoading = ref(false);
 
@@ -375,7 +377,7 @@ const loadAdminRemarques = async () => {
 };
 
 const handleSaveRemarque = async () => {
-    if (!remarqueForm.texte_fr && !remarqueForm.texte_en && !remarqueForm.texte_mg) {
+    if (!remarqueForm.texte_mg && !remarqueForm.texte_fr && !remarqueForm.texte_en) {
         toast.add({
             severity: 'warn',
             summary: 'Attention',
@@ -388,9 +390,9 @@ const handleSaveRemarque = async () => {
     saveRemarqueLoading.value = true;
     try {
         await DonationService.createRemarque({
+            texte_mg: remarqueForm.texte_mg,
             texte_fr: remarqueForm.texte_fr,
-            texte_en: remarqueForm.texte_en,
-            texte_mg: remarqueForm.texte_mg
+            texte_en: remarqueForm.texte_en
         });
         toast.add({
             severity: 'success',
@@ -506,9 +508,9 @@ const loadAdminDonations = async () => {
     }
 };
 
-// Enregistrer la saisie
+// Enregistrer la saisie (prénom facultatif, sans remarque)
 const handleSaveDonation = async () => {
-    if (!donationForm.nom || !donationForm.prenom || !donationForm.contact || donationForm.somme === null) {
+    if (!donationForm.nom || !donationForm.contact || donationForm.somme === null) {
         toast.add({
             severity: 'warn',
             summary: 'Attention',
@@ -522,10 +524,9 @@ const handleSaveDonation = async () => {
     try {
         await DonationService.createDonation({
             nom: donationForm.nom,
-            prenom: donationForm.prenom,
+            prenom: donationForm.prenom ? donationForm.prenom.trim() : '',
             contact: donationForm.contact,
-            somme: Number(donationForm.somme),
-            remarque: donationForm.remarque
+            somme: Number(donationForm.somme)
         });
 
         toast.add({
@@ -578,7 +579,6 @@ const resetForm = () => {
     donationForm.prenom = '';
     donationForm.contact = '';
     donationForm.somme = null;
-    donationForm.remarque = '';
 };
 
 // Vérifier session existante au chargement
@@ -602,16 +602,18 @@ onMounted(() => {
 .saisi-page-container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 1.5rem 1.5rem 3rem;
+    padding: 1.25rem 1.5rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .mt-4 { margin-top: 1rem; }
 .mt-6 { margin-top: 1.5rem; }
-.text-emerald { color: #059669; }
-.text-sm { font-size: 0.85rem; }
-.text-slate-500 { color: #64748b; }
 
-/* Écran Login */
+/* ======================================================== */
+/* ÉCRAN LOGIN (Style monochrome pur)                       */
+/* ======================================================== */
 .login-wrapper {
     display: flex;
     justify-content: center;
@@ -625,14 +627,13 @@ onMounted(() => {
     padding: 2.25rem 2rem;
     background: #ffffff;
     border-radius: 20px;
-    box-shadow: 0 4px 25px -4px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: none;
 }
 
 :global(html.dark) .login-card {
-    background: #111827;
-    border-color: #1e293b;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    background: #181818;
+    box-shadow: none;
 }
 
 .login-header {
@@ -644,7 +645,7 @@ onMounted(() => {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: #eeeeee;
+    background: #efefef;
     color: #171717;
     font-size: 1.4rem;
     display: inline-flex;
@@ -655,24 +656,28 @@ onMounted(() => {
 }
 
 :global(html.dark) .lock-circle {
-    background: #252525;
+    background: #242424;
     color: #ffffff;
 }
 
 .login-title {
     font-size: 1.35rem;
     font-weight: 800;
-    color: #0f172a;
+    color: #171717;
 }
 
 :global(html.dark) .login-title {
-    color: #f1f5f9;
+    color: #ffffff;
 }
 
 .login-subtitle {
     font-size: 0.88rem;
-    color: #64748b;
+    color: #737373;
     margin-top: 0.3rem;
+}
+
+:global(html.dark) .login-subtitle {
+    color: #a3a3a3;
 }
 
 .login-form {
@@ -690,7 +695,7 @@ onMounted(() => {
 .form-group label {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #334155;
+    color: #444444;
 }
 
 :global(html.dark) .form-group label {
@@ -706,26 +711,27 @@ onMounted(() => {
 .input-with-icon i {
     position: absolute;
     left: 14px;
-    color: #94a3b8;
+    color: #737373;
     z-index: 2;
 }
 
 .input-with-icon :deep(input) {
-    padding-left: 2.5rem !important;
+    padding-left: 2.6rem !important;
     border-radius: 12px;
     border: none;
-    background: #f0f0f0;
+    background: #efefef;
+    color: #111111;
 }
 
 :global(html.dark) .input-with-icon :deep(input) {
-    background: #222222;
-    color: #f8fafc;
+    background: #202020;
+    color: #ffffff;
 }
 
 .error-banner {
-    background: #fef2f2;
-    border: none;
-    color: #b91c1c;
+    background: #efefef;
+    border-left: 3px solid #171717;
+    color: #171717;
     padding: 0.75rem 1rem;
     border-radius: 8px;
     font-size: 0.88rem;
@@ -734,26 +740,43 @@ onMounted(() => {
     gap: 0.5rem;
 }
 
+:global(html.dark) .error-banner {
+    background: #222222;
+    border-left-color: #ffffff;
+    color: #ffffff;
+}
+
 .submit-btn {
-    background: #171717 !important;
+    background: #000000 !important;
     color: #ffffff !important;
     border: none !important;
     padding: 0.85rem !important;
     font-weight: 700 !important;
     border-radius: 12px !important;
+    transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #222222 !important;
 }
 
 :global(html.dark) .submit-btn {
     background: #ffffff !important;
-    color: #171717 !important;
+    color: #121212 !important;
 }
 
-/* Espace Saisie connecté */
+:global(html.dark) .submit-btn:hover {
+    background: #e5e5e5 !important;
+}
+
+/* ======================================================== */
+/* ESPACE SAISIE CONNECTÉ (Aligné sur Home)                 */
+/* ======================================================== */
 .admin-topbar {
-    background: #f5f5f5;
+    background: #efefef;
     border: none;
     border-radius: 16px;
-    padding: 1rem 1.5rem;
+    padding: 0.85rem 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -771,15 +794,15 @@ onMounted(() => {
 }
 
 .user-avatar-tag {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 10px;
-    background: #e5e5e5;
-    color: #171717;
+    background: #000000;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 :global(html.dark) .user-avatar-tag {
@@ -790,11 +813,11 @@ onMounted(() => {
 .user-welcome {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #0f172a;
+    color: #171717;
 }
 
 :global(html.dark) .user-welcome {
-    color: #f8fafc;
+    color: #ffffff;
 }
 
 .topbar-actions {
@@ -806,9 +829,9 @@ onMounted(() => {
 .view-public-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.55rem 0.9rem;
-    background: #e8e8e8;
+    gap: 0.45rem;
+    padding: 0.55rem 0.95rem;
+    background: #ffffff;
     border: none;
     border-radius: 10px;
     font-size: 0.85rem;
@@ -817,42 +840,60 @@ onMounted(() => {
     transition: all 0.2s;
 }
 
+.view-public-btn:hover {
+    background: #e4e4e4;
+}
+
 :global(html.dark) .view-public-btn {
     background: #242424;
-    color: #f5f5f5;
+    color: #ffffff;
+}
+
+:global(html.dark) .view-public-btn:hover {
+    background: #303030;
 }
 
 .logout-btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.55rem 0.9rem;
-    background: #fee2e2;
+    gap: 0.45rem;
+    padding: 0.55rem 0.95rem;
+    background: #000000;
     border: none;
     border-radius: 10px;
     font-size: 0.85rem;
     font-weight: 600;
-    color: #b91c1c;
+    color: #ffffff;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-:global(html.dark) .logout-btn {
-    background: #2e1a1a;
-    color: #f87171;
+.logout-btn:hover {
+    background: #222222;
 }
 
-/* Formulaire */
+:global(html.dark) .logout-btn {
+    background: #242424;
+    color: #ffffff;
+}
+
+:global(html.dark) .logout-btn:hover {
+    background: #303030;
+}
+
+/* Formulaire et cartes */
 .form-card, .recent-table-card {
-    background: #f7f7f7;
+    background: #ffffff;
     border-radius: 18px;
     padding: 1.5rem 1.75rem;
     border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
 }
 
 :global(html.dark) .form-card,
 :global(html.dark) .recent-table-card {
     background: #181818;
+    box-shadow: none;
 }
 
 .card-header-flex {
@@ -864,7 +905,7 @@ onMounted(() => {
 .form-main-title, .table-title {
     font-size: 1.25rem;
     font-weight: 800;
-    color: #0f172a;
+    color: #171717;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -872,13 +913,18 @@ onMounted(() => {
 
 :global(html.dark) .form-main-title,
 :global(html.dark) .table-title {
-    color: #f1f5f9;
+    color: #ffffff;
 }
 
 .form-main-subtitle, .table-subtitle {
     font-size: 0.88rem;
-    color: #64748b;
+    color: #737373;
     margin-top: 0.2rem;
+}
+
+:global(html.dark) .form-main-subtitle,
+:global(html.dark) .table-subtitle {
+    color: #a3a3a3;
 }
 
 .form-grid {
@@ -899,13 +945,14 @@ onMounted(() => {
 
 .required-label::after {
     content: " *";
-    color: #ef4444;
+    color: #737373;
+    font-weight: 800;
 }
 
 .form-field label {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #334155;
+    color: #444444;
 }
 
 :global(html.dark) .form-field label {
@@ -916,11 +963,15 @@ onMounted(() => {
     border-radius: 12px;
     border: none;
     background: #efefef;
+    color: #111111;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    font-weight: 500;
 }
 
 :global(html.dark) .form-field :deep(input) {
-    background: #222222;
-    color: #f8fafc;
+    background: #202020;
+    color: #ffffff;
 }
 
 .somme-input-container {
@@ -952,23 +1003,32 @@ onMounted(() => {
 }
 
 .submit-donation-btn {
-    background: #171717 !important;
+    background: #000000 !important;
     color: #ffffff !important;
     border: none !important;
-    padding: 0.85rem 1.5rem !important;
+    padding: 0.85rem 1.6rem !important;
     font-weight: 700 !important;
     border-radius: 12px !important;
+    transition: all 0.2s ease;
+}
+
+.submit-donation-btn:hover {
+    background: #222222 !important;
 }
 
 :global(html.dark) .submit-donation-btn {
     background: #ffffff !important;
-    color: #171717 !important;
+    color: #121212 !important;
+}
+
+:global(html.dark) .submit-donation-btn:hover {
+    background: #e5e5e5 !important;
 }
 
 .reset-btn {
     background: transparent;
     border: none;
-    color: #64748b;
+    color: #737373;
     padding: 0.85rem 1.25rem;
     border-radius: 12px;
     font-weight: 600;
@@ -979,14 +1039,22 @@ onMounted(() => {
     transition: all 0.2s;
 }
 
+.reset-btn:hover {
+    color: #111111;
+}
+
 :global(html.dark) .reset-btn {
-    color: #999999;
+    color: #a3a3a3;
+}
+
+:global(html.dark) .reset-btn:hover {
+    color: #ffffff;
 }
 
 .delete-action-btn {
-    background: #fee2e2;
+    background: #efefef;
     border: none;
-    color: #dc2626;
+    color: #555555;
     width: 32px;
     height: 32px;
     border-radius: 8px;
@@ -994,12 +1062,28 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-action-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+:global(html.dark) .delete-action-btn {
+    background: #242424;
+    color: #cccccc;
+}
+
+:global(html.dark) .delete-action-btn:hover {
+    background: #ffffff;
+    color: #000000;
 }
 
 .refresh-table-btn {
-    background: #ececec;
+    background: #efefef;
     border: none;
-    color: #475569;
+    color: #171717;
     width: 36px;
     height: 36px;
     border-radius: 8px;
@@ -1007,21 +1091,44 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refresh-table-btn:hover {
+    background: #e0e0e0;
 }
 
 :global(html.dark) .refresh-table-btn {
-    background: #252525;
-    color: #cbd5e1;
-}
-
-.somme-badge {
-    color: #171717;
-    font-weight: 800;
-    display: inline-block;
-}
-
-:global(html.dark) .somme-badge {
+    background: #242424;
     color: #ffffff;
+}
+
+:global(html.dark) .refresh-table-btn:hover {
+    background: #303030;
+}
+
+.prenom-anonyme {
+    font-style: italic;
+    opacity: 0.75;
+}
+
+.date-cell {
+    font-size: 0.84rem;
+    color: #737373;
+}
+
+:global(html.dark) .date-cell {
+    color: #a3a3a3;
+}
+
+.remarque-table-text {
+    font-size: 0.88rem;
+    color: #262626;
+    line-height: 1.4;
+}
+
+:global(html.dark) .remarque-table-text {
+    color: #e5e5e5;
 }
 
 .table-responsive-wrapper {

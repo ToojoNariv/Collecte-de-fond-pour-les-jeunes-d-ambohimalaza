@@ -118,10 +118,10 @@ app.post('/api/donations', async (req, res) => {
     try {
         const { nom, prenom, contact, somme, remarque } = req.body;
 
-        if (!nom || !prenom || !contact || somme === undefined || somme === null) {
+        if (!nom || !contact || somme === undefined || somme === null) {
             return res.status(400).json({
                 success: false,
-                message: 'Veuillez renseigner Nom, Prénom, Contact et Somme.'
+                message: 'Veuillez renseigner Nom, Contact et Somme.'
             });
         }
 
@@ -135,7 +135,7 @@ app.post('/api/donations', async (req, res) => {
 
         const newDonation = new Donation({
             nom: nom.trim(),
-            prenom: prenom.trim(),
+            prenom: prenom ? prenom.trim() : '',
             contact: contact.trim(),
             somme: numericSomme,
             remarque: remarque ? remarque.trim() : ''
@@ -162,7 +162,7 @@ app.put('/api/donations/:id', async (req, res) => {
             req.params.id,
             {
                 ...(nom && { nom: nom.trim() }),
-                ...(prenom && { prenom: prenom.trim() }),
+                ...(prenom !== undefined && { prenom: prenom ? prenom.trim() : '' }),
                 ...(contact && { contact: contact.trim() }),
                 ...(somme !== undefined && { somme: Number(somme) }),
                 ...(remarque !== undefined && { remarque: remarque.trim() })

@@ -9,8 +9,9 @@ const DonationSchema = new mongoose.Schema(
         },
         prenom: {
             type: String,
-            required: [true, 'Le prénom est obligatoire'],
-            trim: true
+            required: false,
+            trim: true,
+            default: ''
         },
         contact: {
             type: String,

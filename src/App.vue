@@ -1,11 +1,10 @@
 <template>
   <div class="app-root">
-    <!-- Barre supérieure ultra-épurée (Thème & Langue uniquement, aucun lien public vers la saisie) -->
-    <header class="minimal-topbar">
+    <!-- Barre supérieure : affichée UNIQUEMENT sur les pages secondaires (ex: /neny-mampiditra-saisi) -->
+    <header v-if="$route.path !== '/'" class="minimal-topbar">
       <div class="topbar-container">
         <!-- Bouton retour présent UNIQUEMENT si on est sur la page de saisie secrète -->
         <router-link 
-          v-if="$route.path !== '/'" 
           to="/" 
           class="ctrl-btn back-btn" 
           :title="$t('back_to_table')"
@@ -13,7 +12,6 @@
           <i class="pi pi-arrow-left"></i>
           <span>{{ $t('back_to_table') }}</span>
         </router-link>
-        <div v-else></div>
 
         <!-- Contrôles discrets à droite -->
         <div class="topbar-actions">
@@ -39,11 +37,15 @@
     <main class="main-content">
       <router-view />
     </main>
+
+    <!-- Vercel Web Analytics -->
+    <Analytics />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { Analytics } from '@vercel/analytics/vue';
 import LangSwitcher from './components/LangSwitcher.vue';
 
 const isDark = ref(false);
@@ -70,8 +72,8 @@ onMounted(() => {
   if (savedTheme) {
     applyTheme(savedTheme === 'dark');
   } else {
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    applyTheme(prefersDark);
+    // Par défaut, le thème est le blanc (mode clair)
+    applyTheme(false);
   }
 });
 </script>

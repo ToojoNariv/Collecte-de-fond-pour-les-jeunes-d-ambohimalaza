@@ -1,28 +1,48 @@
 <template>
   <div class="clean-page-container">
-    <!-- 1. En-tête : Logo TRÈS GRAND à gauche (prend toute la hauteur du header), Somme totale tout à droite -->
-    <header class="top-header-clean">
-      <div class="logo-left-box">
+    <!-- 1. En-tête : Logo GÉANT à gauche qui prend tout le header jusqu'en haut, Contrôles & Somme compacte à droite -->
+    <header class="hero-top-header">
+      <!-- Colonne Gauche : Logo qui s'étend jusqu'au sommet du header -->
+      <div class="logo-hero-side">
         <img 
           :src="logoSvg" 
           alt="Justice pour les jeunes" 
-          class="header-logo-large" 
+          class="header-logo-hero" 
           :style="{ filter: isDarkMode ? 'brightness(0) invert(1)' : 'brightness(0)' }"
         />
       </div>
 
-      <div class="total-right-box">
-        <span class="total-label">{{ $t('total_collected') }}</span>
-        <h1 
-          class="total-amount" 
-          :style="{ color: isDarkMode ? '#ffffff' : '#111111' }"
-        >
-          {{ formatSomme(totalSomme) }}
-        </h1>
+      <!-- Colonne Droite : Contrôles (Thème & Langue) en haut, Somme totale en dessous -->
+      <div class="stats-controls-side">
+        <!-- Contrôles Thème & Langue au sommet à droite -->
+        <div class="topbar-controls">
+          <!-- Bouton Thème Jour / Nuit (Noir en clair, gris en dark) -->
+          <button 
+            @click="toggleTheme" 
+            class="ctrl-btn theme-btn" 
+            :title="isDarkMode ? $t('theme_light') : $t('theme_dark')"
+          >
+            <i :class="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"></i>
+          </button>
+
+          <!-- Sélecteur de langue avec drapeaux GIF (style ShiftUp) -->
+          <LangSwitcher />
+        </div>
+
+        <!-- Somme totale compacte (non agrandie, proportionnelle et nette) -->
+        <div class="total-compact-box">
+          <span class="total-label">{{ $t('total_collected') }}</span>
+          <h1 
+            class="total-amount" 
+            :style="{ color: isDarkMode ? '#ffffff' : '#111111' }"
+          >
+            {{ formatSomme(totalSomme) }}
+          </h1>
+        </div>
       </div>
     </header>
 
-    <!-- 2. Barre de recherche : sans fond, animation label flottant au focus/saisi, texte net et grand -->
+    <!-- 2. Barre de recherche : sans fond, animation label flottant au focus/saisie, texte net et grand -->
     <div class="search-div-transparent">
       <FloatLabel 
         variant="in" 
@@ -92,8 +112,8 @@
 
         <Column field="prenom" :header="$t('col_prenom')" sortable>
           <template #body="slotProps">
-            <div class="prenom-cell">
-              {{ slotProps.data.prenom }}
+            <div class="prenom-cell" :class="{ 'prenom-anonyme': !slotProps.data.prenom || !slotProps.data.prenom.trim() }">
+              {{ slotProps.data.prenom && slotProps.data.prenom.trim() ? slotProps.data.prenom : ($t('anonymous_firstname') || 'Prénom anonyme') }}
             </div>
           </template>
         </Column>
@@ -135,6 +155,7 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ProductService } from '@/service/ProductService';
+import LangSwitcher from '@/components/LangSwitcher.vue';
 import logoSvg from '@/assets/logo.svg';
 
 const { locale } = useI18n();
@@ -157,6 +178,22 @@ let themeObserver = null;
 const checkDarkMode = () => {
   isDarkMode.value = document.documentElement.classList.contains('dark') || 
                      document.body.classList.contains('dark');
+};
+
+const toggleTheme = () => {
+  const isDarkNow = document.documentElement.classList.contains('dark') || 
+                    document.body.classList.contains('dark');
+  const newTheme = !isDarkNow;
+  if (newTheme) {
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
+    localStorage.setItem('collecte_theme', 'dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+    document.body.classList.remove('dark');
+    localStorage.setItem('collecte_theme', 'light');
+  }
+  isDarkMode.value = newTheme;
 };
 
 // Formatage en Ariary (Ar)
@@ -212,7 +249,7 @@ const filteredProducts = computed(() => {
 
   return products.value.filter((item) => {
     const nom = (item.nom || '').toLowerCase();
-    const prenom = (item.prenom || '').toLowerCase();
+    const prenom = (item.prenom || 'Prénom anonyme').toLowerCase();
     const contactRaw = (item.contact || '').toLowerCase();
     const contactCleaned = contactRaw.replace(/\s+/g, '');
 
@@ -268,32 +305,33 @@ onBeforeUnmount(() => {
 .clean-page-container {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0.5rem 1.5rem 3.5rem;
+  padding: 1.25rem 1.5rem 3.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-/* 1. En-tête : Logo TRÈS GRAND à gauche, total à droite */
-.top-header-clean {
+/* 1. En-tête : Logo GÉANT qui s'étend jusqu'au sommet du header */
+.hero-top-header {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   width: 100%;
-  padding: 0.5rem 0 1rem;
-  gap: 1.5rem;
+  padding: 0.25rem 0 0.5rem;
+  gap: 2rem;
+  min-height: 195px;
 }
 
-.logo-left-box {
+.logo-hero-side {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex: 1;
 }
 
-.header-logo-large {
-  height: 140px;
-  max-height: 155px;
+.header-logo-hero {
+  height: 195px;
+  max-height: 220px;
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -301,13 +339,65 @@ onBeforeUnmount(() => {
   user-select: none;
 }
 
-.total-right-box {
+.stats-controls-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  text-align: right;
+  flex-shrink: 0;
+  padding: 0.25rem 0;
+}
+
+.topbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.ctrl-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Bouton thème : NOIR en mode clair, GRIS en mode sombre */
+.theme-btn {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+.theme-btn:hover {
+  background: #222222 !important;
+  color: #ffffff !important;
+}
+
+:global(html.dark) .theme-btn,
+:global(body.dark) .theme-btn {
+  background: #242424 !important;
+  color: #f3f3f3 !important;
+}
+
+:global(html.dark) .theme-btn:hover,
+:global(body.dark) .theme-btn:hover {
+  background: #303030 !important;
+  color: #ffffff !important;
+}
+
+.total-compact-box {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   text-align: right;
-  justify-content: center;
-  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 1rem;
 }
 
 .total-label {
@@ -320,7 +410,7 @@ onBeforeUnmount(() => {
 }
 
 .total-amount {
-  font-size: 3.4rem;
+  font-size: 3.2rem;
   font-weight: 900;
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -443,13 +533,18 @@ onBeforeUnmount(() => {
 /* RESPONSIVE : TABLETTE (641px - 1024px)                  */
 /* ======================================================== */
 @media (min-width: 641px) and (max-width: 1024px) {
-  .header-logo-large {
-    height: 110px;
-    max-height: 120px;
+  .hero-top-header {
+    min-height: 150px;
+    gap: 1.5rem;
+  }
+
+  .header-logo-hero {
+    height: 150px;
+    max-height: 165px;
   }
 
   .total-amount {
-    font-size: 2.7rem;
+    font-size: 2.6rem;
   }
 }
 
@@ -458,32 +553,47 @@ onBeforeUnmount(() => {
 /* ======================================================== */
 @media (max-width: 640px) {
   .clean-page-container {
-    padding: 0.25rem 1rem 2.5rem;
+    padding: 0.75rem 1rem 2.5rem;
     gap: 1.25rem;
   }
 
-  .top-header-clean {
+  .hero-top-header {
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 1.25rem;
     padding: 0.25rem 0 0.5rem;
+    min-height: auto;
   }
 
-  .logo-left-box {
+  .stats-controls-side {
+    width: 100%;
+    align-items: center;
+    gap: 1rem;
+    padding: 0;
+  }
+
+  .topbar-controls {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .logo-hero-side {
     justify-content: center;
     width: 100%;
   }
 
-  .header-logo-large {
-    height: 90px;
-    max-height: 95px;
+  .header-logo-hero {
+    height: 105px;
+    max-height: 115px;
   }
 
-  .total-right-box {
+  .total-compact-box {
     align-items: center;
     text-align: center;
     width: 100%;
+    padding-top: 0;
+    margin-top: 0;
   }
 
   .total-label {
@@ -491,7 +601,7 @@ onBeforeUnmount(() => {
   }
 
   .total-amount {
-    font-size: 2.25rem;
+    font-size: 2.2rem;
   }
 
   .name-cell,

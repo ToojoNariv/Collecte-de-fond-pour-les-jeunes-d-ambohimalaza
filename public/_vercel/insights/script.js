@@ -1,0 +1,2 @@
+// Vercel insights fallback
+(function(){})();

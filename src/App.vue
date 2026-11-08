@@ -37,15 +37,11 @@
     <main class="main-content">
       <router-view />
     </main>
-
-    <!-- Vercel Web Analytics -->
-    <Analytics />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { Analytics } from '@vercel/analytics/vue';
 import LangSwitcher from './components/LangSwitcher.vue';
 
 const isDark = ref(false);

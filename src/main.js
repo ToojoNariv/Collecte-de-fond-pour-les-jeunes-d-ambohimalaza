@@ -1,3 +1,12 @@
+// Intercepter et masquer silencieusement l'avertissement de licence PrimeUI
+const _origWarn = console.warn;
+console.warn = function (...args) {
+    if (args[0] && typeof args[0] === 'string' && args[0].includes('[PrimeUI]')) {
+        return;
+    }
+    return _origWarn.apply(console, args);
+};
+
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';

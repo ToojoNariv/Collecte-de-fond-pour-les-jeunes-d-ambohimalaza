@@ -437,17 +437,14 @@ onBeforeUnmount(() => {
 
 .logo-hero-side {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: flex-start;
-  align-self: stretch;
-  flex: 0 0 auto;
-  max-width: 52%;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .header-logo-hero {
-  height: 100%;
-  min-height: 165px;
-  max-height: 185px;
+  height: clamp(175px, 15vw, 210px);
   width: auto;
   max-width: 100%;
   object-fit: contain;
@@ -462,8 +459,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: flex-end;
   text-align: right;
-  align-self: stretch;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   padding: 0;
 }
 
@@ -632,26 +628,26 @@ body.dark .row-index-badge,
   word-break: keep-all;
 }
 
-/* 4. Section Remarques (Fanamarihana) : couleur gris tête de colonnes, texte bien noir, scrollable sans scrollbar avec dégradé opacité 0 */
+/* 4. Section Remarques (Fanamarihana) : couleur gris tête de colonnes, sans bordure, texte bien noir, interligne aéré */
 .remarques-section {
   flex-shrink: 0;
-  background: #efefef;
+  background: #efefef !important;
   border-radius: 14px;
-  border: 1px solid #e0e0e0;
-  padding: 0.65rem 1rem 0.55rem;
+  border: none !important;
+  padding: 0.85rem 1.25rem 0.75rem;
   margin-top: 0;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 html.dark .remarques-section,
 body.dark .remarques-section,
 .dark .remarques-section {
   background: #202020 !important;
-  border-color: #2e2e2e !important;
+  border: none !important;
 }
 
 .remarques-header {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.45rem;
 }
 
 .remarques-heading {
@@ -669,7 +665,7 @@ body.dark .remarques-heading,
 }
 
 .remarques-scroll-box {
-  max-height: 85px;
+  max-height: 115px;
   overflow-y: auto;
   position: relative;
   /* Scrollbar masquée */
@@ -692,15 +688,15 @@ body.dark .remarques-heading,
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.6rem;
 }
 
 .remarque-point {
   display: flex;
   align-items: flex-start;
-  gap: 0.55rem;
-  font-size: 0.92rem;
-  line-height: 1.45;
+  gap: 0.65rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
   word-break: break-word;
   color: #000000 !important;
 }
@@ -712,8 +708,8 @@ body.dark .remarque-point,
 }
 
 .bullet-dot {
-  font-size: 1.15rem;
-  line-height: 1.3;
+  font-size: 1.25rem;
+  line-height: 1.5;
   flex-shrink: 0;
   color: #000000 !important;
 }
@@ -728,6 +724,7 @@ body.dark .bullet-dot,
   flex: 1;
   color: #000000 !important;
   font-weight: 600;
+  line-height: 1.65;
 }
 
 html.dark .remarque-text,
@@ -777,9 +774,11 @@ body.dark .remarque-text,
   }
 
   .header-logo-hero {
-    height: 100%;
-    min-height: 145px;
-    max-height: 160px;
+    height: clamp(140px, 16vw, 165px);
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: left center;
   }
 
   .total-amount {
@@ -787,7 +786,7 @@ body.dark .remarque-text,
   }
 
   .remarques-scroll-box {
-    max-height: 80px;
+    max-height: 100px;
   }
 }
 
@@ -812,35 +811,31 @@ body.dark .remarque-text,
     gap: 0.65rem;
   }
 
-  /* Logo agrandi pour avoir la MÊME HAUTEUR que le bloc de droite (boutons + montant total) */
+  /* Logo agrandi pour occuper toute la hauteur du bloc de droite (boutons + montant total) */
   .logo-hero-side {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     justify-content: flex-start;
-    align-self: stretch;
-    flex: 0 0 auto;
-    max-width: 50%;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .header-logo-hero {
-    height: 100%;
-    min-height: 124px;
-    max-height: 135px;
+    height: clamp(108px, 28vw, 126px);
     width: auto;
     max-width: 100%;
     object-fit: contain;
     object-position: left center;
   }
 
-  /* Contrôles et Somme tout à droite */
+  /* Contrôles et Somme tout à droite : largeur compacte automatique */
   .stats-controls-side {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-end;
     text-align: right;
-    align-self: stretch;
-    flex: 1;
+    flex: 0 0 auto;
     min-width: 0;
     padding: 0;
   }
@@ -891,12 +886,10 @@ body.dark .remarque-text,
     white-space: nowrap;
   }
 
-  /* Réduction de la hauteur du tableau sur mobile */
+  /* Tableau : remplit tout l'espace disponible sans laisser de vide en bas */
   .table-wrapper {
-    flex: 0 1 auto;
-    height: 38dvh;
-    max-height: 38dvh;
-    min-height: 150px;
+    flex: 1 1 0;
+    min-height: 140px;
   }
 
   .name-cell,
@@ -909,28 +902,29 @@ body.dark .remarque-text,
     font-size: 0.84rem;
   }
 
-  /* Remarques (Fanamarihana) sur mobile : fond gris, texte bien noir, scrollable avec dégradé */
+  /* Remarques (Fanamarihana) sur mobile : fond gris, sans bordure, texte bien noir, scrollable avec dégradé */
   .remarques-section {
-    padding: 0.55rem 0.85rem 0.45rem;
-    border-radius: 12px;
+    padding: 0.65rem 0.95rem 0.55rem;
+    border-radius: 14px;
+    border: none !important;
   }
 
   .remarques-heading {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     font-weight: 800;
     margin-bottom: 0.25rem;
   }
 
   .remarques-scroll-box {
-    max-height: 75px;
+    max-height: 95px;
     -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 18px), transparent 100%);
     mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 18px), transparent 100%);
   }
 
   .remarque-point {
-    font-size: 0.82rem;
-    gap: 0.45rem;
-    line-height: 1.4;
+    font-size: 0.84rem;
+    gap: 0.5rem;
+    line-height: 1.5;
   }
 }
 </style>

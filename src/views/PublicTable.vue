@@ -604,8 +604,8 @@ onBeforeUnmount(() => {
   max-width: 100%;
   background: #000000 !important;
   color: #ffffff !important;
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
   padding: 0.28rem 1.25rem;
@@ -628,6 +628,21 @@ onBeforeUnmount(() => {
   font-weight: 700;
   display: inline-block;
   white-space: nowrap;
+}
+
+/* Version inversée en dark mode pour le compte à rebours : fond blanc et texte noir */
+html.dark .countdown-banner,
+body.dark .countdown-banner,
+.dark .countdown-banner {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+html.dark .countdown-text,
+body.dark .countdown-text,
+.dark .countdown-text {
+  color: #000000 !important;
+  font-weight: 800 !important;
 }
 
 .search-div-transparent {
@@ -800,13 +815,15 @@ body.dark .remarques-section,
   box-sizing: border-box;
 }
 
+/* Version inversée en dark mode pour le badge transfert : fond blanc et texte noir, pas de radius */
 html.dark .remarque-transfert-badge,
 body.dark .remarque-transfert-badge,
 .dark .remarque-transfert-badge {
-  background: #000000 !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: none !important;
   border-radius: 0 !important;
+  font-weight: 800 !important;
 }
 
 html.dark .remarques-heading,
@@ -1000,10 +1017,10 @@ body.dark .loading-spinner-icon,
 /* ======================================================== */
 @media (max-width: 640px) {
   .countdown-banner {
-    padding: 0.22rem 0.65rem;
+    padding: 0.22rem 0.85rem;
     font-size: 0.76rem;
-    border-top-left-radius: 14px;
-    border-top-right-radius: 14px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
   }
 
   .clean-page-container {

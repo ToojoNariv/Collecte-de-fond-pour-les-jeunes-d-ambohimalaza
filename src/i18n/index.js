@@ -46,7 +46,7 @@ const messages = {
         anonymous_firstname: "Prénom anonyme",
         countdown_text: "Se termine dans {time}",
         countdown_ended: "Collecte terminée",
-        remarque_transfert_rappel: "Rappel : transfert au 034 04 526 84 tompoko"
+        remarque_transfert_rappel: "Je lle que c'eappe,st un transfert au 034 04 526 84"
     },
     en: {
         total_collected: "Total Collected",

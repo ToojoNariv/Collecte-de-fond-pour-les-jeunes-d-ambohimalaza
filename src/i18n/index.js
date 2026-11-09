@@ -46,7 +46,7 @@ const messages = {
         anonymous_firstname: "Prénom anonyme",
         countdown_text: "Se termine dans {time}",
         countdown_ended: "Collecte terminée",
-        remarque_transfert_rappel: "Petit rappel,c'est un transfert vers 034 04 526 84, merci"
+        remarque_transfert_rappel: "Il s'agit d'un transfert au 034 04 526 84, merci beaucoup"
     },
     en: {
         total_collected: "Total Collected",
@@ -93,7 +93,7 @@ const messages = {
         anonymous_firstname: "Anonymous",
         countdown_text: "Ends in {time}",
         countdown_ended: "Campaign ended",
-        remarque_transfert_rappel: "Reminder: transfer to 034 04 526 84 tompoko"
+        remarque_transfert_rappel: "It is a transfer to 034 04 256 84,thank you so much"
     },
     mg: {
         total_collected: "Vola Voaangona",

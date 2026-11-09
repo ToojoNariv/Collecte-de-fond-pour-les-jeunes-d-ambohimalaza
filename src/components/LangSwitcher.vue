@@ -30,9 +30,9 @@ const isLangMenuOpen = ref(false);
 const wrapperRef = ref(null);
 
 const availableLanguages = [
+  { code: 'mg', name: 'Malagasy', gif: 'https://res.cloudinary.com/dzgdjei0h/image/upload/v1772798282/Madagascar_Flag_Gif_GIF_-_Madagascar_Flag_Gif_Africa_-_Discover_Share_GIFs_1_xfbaa4.gif' },
   { code: 'fr', name: 'Français', gif: 'https://res.cloudinary.com/dzgdjei0h/image/upload/v1772994723/france-flag-gif_lqygo7.gif' },
-  { code: 'en', name: 'English', gif: 'https://res.cloudinary.com/dzgdjei0h/image/upload/v1772798239/United_Kingdom_United_Kingdom_Flag_GIF_United_Kingdom_United_Kingdom_Flag_Flag_Waving_discover_and_share_GIFs_1_ennasn.gif' },
-  { code: 'mg', name: 'Malagasy', gif: 'https://res.cloudinary.com/dzgdjei0h/image/upload/v1772798282/Madagascar_Flag_Gif_GIF_-_Madagascar_Flag_Gif_Africa_-_Discover_Share_GIFs_1_xfbaa4.gif' }
+  { code: 'en', name: 'English', gif: 'https://res.cloudinary.com/dzgdjei0h/image/upload/v1772798239/United_Kingdom_United_Kingdom_Flag_GIF_United_Kingdom_United_Kingdom_Flag_Flag_Waving_discover_and_share_GIFs_1_ennasn.gif' }
 ];
 
 const currentLangObj = computed(() => {

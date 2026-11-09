@@ -225,8 +225,8 @@ import logoSvg from '@/assets/logo.svg';
 
 const { locale, t } = useI18n();
 
-// Compte à rebours fin de collecte : Mercredi 18 novembre 2026 à 06h00 (Madagascar UTC+3)
-const TARGET_END_DATE = new Date('2026-11-18T06:00:00+03:00').getTime();
+// Compte à rebours fin de collecte : Mercredi 18 novembre 2026 à 18h00 (Madagascar UTC+3)
+const TARGET_END_DATE = new Date('2026-11-18T18:00:00+03:00').getTime();
 const isCountdownEnded = ref(false);
 const daysLeft = ref(0);
 const hoursLeft = ref(0);
@@ -299,15 +299,14 @@ const totalCount = ref(0);
 const LAST_SEEN_SOMME_KEY = 'collecte_last_seen_somme';
 const lastSeenSomme = ref(null);
 const displayedSomme = ref(0);
-const targetSommeLen = ref(0);
+const targetSommeLen = ref(7); // Par défaut 7 chiffres (ex: 2 125 000)
 let hasInitializedSomme = false;
 
 try {
   const saved = localStorage.getItem(LAST_SEEN_SOMME_KEY);
   if (saved !== null && saved !== '' && !isNaN(Number(saved))) {
     lastSeenSomme.value = Number(saved);
-    displayedSomme.value = Number(saved);
-    targetSommeLen.value = String(Math.max(0, Math.round(Number(saved)))).length;
+    targetSommeLen.value = Math.max(1, String(Math.round(Number(saved))).length);
   }
 } catch (e) {
   console.warn('localStorage non accessible:', e);
@@ -487,34 +486,15 @@ const loadData = async (query = '') => {
 
     if (!hasInitializedSomme) {
       hasInitializedSomme = true;
-      if (lastSeenSomme.value !== null) {
-        if (lastSeenSomme.value !== newTotal) {
-          // La somme a changé par rapport à la dernière somme vue par l'utilisateur
-          targetSommeLen.value = Math.max(String(lastSeenSomme.value).length, newLen);
-          displayedSomme.value = lastSeenSomme.value;
-          setTimeout(() => {
-            displayedSomme.value = newTotal;
-            targetSommeLen.value = newLen;
-            try {
-              localStorage.setItem(LAST_SEEN_SOMME_KEY, String(newTotal));
-            } catch (e) {}
-          }, 120);
-        } else {
-          // Somme inchangée : affichage direct sans roulement
-          displayedSomme.value = newTotal;
-          targetSommeLen.value = newLen;
-        }
-      } else {
-        // Première visite (aucune somme vue au préalable) : départ de 0 puis roulement vers newTotal
-        targetSommeLen.value = newLen;
-        displayedSomme.value = 0;
-        setTimeout(() => {
-          displayedSomme.value = newTotal;
-          try {
-            localStorage.setItem(LAST_SEEN_SOMME_KEY, String(newTotal));
-          } catch (e) {}
-        }, 120);
-      }
+      // À chaque chargement / rechargement de page, on déclenche l'animation de roulement vers la somme
+      targetSommeLen.value = newLen;
+      displayedSomme.value = 0;
+      setTimeout(() => {
+        displayedSomme.value = newTotal;
+        try {
+          localStorage.setItem(LAST_SEEN_SOMME_KEY, String(newTotal));
+        } catch (e) {}
+      }, 120);
     } else {
       // Déjà initialisé durant la session courante : si la somme globale évolue
       if (displayedSomme.value !== newTotal) {

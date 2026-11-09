@@ -45,7 +45,8 @@ const messages = {
         remarque_saved: "Remarque enregistrée avec succès !",
         anonymous_firstname: "Prénom anonyme",
         countdown_text: "Se termine dans {time}",
-        countdown_ended: "Collecte terminée"
+        countdown_ended: "Collecte terminée",
+        remarque_transfert_rappel: "Rappel : transfert au 034 04 526 84 tompoko"
     },
     en: {
         total_collected: "Total Collected",
@@ -91,7 +92,8 @@ const messages = {
         remarque_saved: "Remark recorded successfully!",
         anonymous_firstname: "Anonymous",
         countdown_text: "Ends in {time}",
-        countdown_ended: "Campaign ended"
+        countdown_ended: "Campaign ended",
+        remarque_transfert_rappel: "Reminder: transfer to 034 04 526 84 tompoko"
     },
     mg: {
         total_collected: "Vola Voaangona",
@@ -137,7 +139,8 @@ const messages = {
         remarque_saved: "Voarakitra soa aman-tsara ny fanamarihana!",
         anonymous_firstname: "Fanampiny anonyme",
         countdown_text: "Mifarana afaka {time}",
-        countdown_ended: "Nifarana ny fanangonam-bola"
+        countdown_ended: "Nifarana ny fanangonam-bola",
+        remarque_transfert_rappel: "Tsahivina fa transfert amin'ny 034 04 526 84  tompoko"
     }
 };
 

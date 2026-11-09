@@ -150,6 +150,9 @@
     <section v-if="remarques && remarques.length > 0" class="remarques-section">
       <div class="remarques-header">
         <h3 class="remarques-heading">{{ $t('remarques_title') }}</h3>
+        <span class="remarque-transfert-badge">
+          {{ $t('remarque_transfert_rappel') }}
+        </span>
       </div>
       <div class="remarques-scroll-box">
         <ul class="remarques-list">
@@ -766,6 +769,10 @@ body.dark .remarques-section,
 }
 
 .remarques-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
   margin-bottom: 0.45rem;
 }
 
@@ -775,6 +782,31 @@ body.dark .remarques-section,
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #000000 !important;
+  margin: 0;
+}
+
+.remarque-transfert-badge {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-radius: 0 !important; /* pas de radius */
+  padding: 0.2rem 0.6rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+html.dark .remarque-transfert-badge,
+body.dark .remarque-transfert-badge,
+.dark .remarque-transfert-badge {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 0 !important;
 }
 
 html.dark .remarques-heading,
@@ -1092,10 +1124,21 @@ body.dark .loading-spinner-icon,
     border: none !important;
   }
 
+  .remarques-header {
+    gap: 0.35rem;
+    margin-bottom: 0.35rem;
+  }
+
   .remarques-heading {
     font-size: 0.88rem;
     font-weight: 800;
-    margin-bottom: 0.35rem;
+    margin: 0;
+  }
+
+  .remarque-transfert-badge {
+    font-size: 0.72rem;
+    padding: 0.16rem 0.45rem;
+    border-radius: 0 !important;
   }
 
   .remarques-scroll-box {

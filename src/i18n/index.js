@@ -43,7 +43,9 @@ const messages = {
         manage_remarques: "Gestion des Remarques (Par langue)",
         manage_remarques_desc: "Ajoutez et modifiez autant de remarques que nécessaire. Elles s'affichent par points sous le tableau selon la langue choisie.",
         remarque_saved: "Remarque enregistrée avec succès !",
-        anonymous_firstname: "Prénom anonyme"
+        anonymous_firstname: "Prénom anonyme",
+        countdown_text: "Se termine dans {time}",
+        countdown_ended: "Collecte terminée"
     },
     en: {
         total_collected: "Total Collected",
@@ -87,7 +89,9 @@ const messages = {
         manage_remarques: "Remarks Management (By language)",
         manage_remarques_desc: "Add and update as many remarks as needed. They appear as bullet points below the table in the chosen language.",
         remarque_saved: "Remark recorded successfully!",
-        anonymous_firstname: "Anonymous"
+        anonymous_firstname: "Anonymous",
+        countdown_text: "Ends in {time}",
+        countdown_ended: "Campaign ended"
     },
     mg: {
         total_collected: "Vola Voaangona",
@@ -131,7 +135,9 @@ const messages = {
         manage_remarques: "Fitantanana ireo Fanamarihana (Isaky ny fiteny)",
         manage_remarques_desc: "Afaka mampiditra fanamarihana araka izay tiana ianao. Hisy teboka hiseho eo ambanin'ny tabilao arakaraka ny fiteny fidina.",
         remarque_saved: "Voarakitra soa aman-tsara ny fanamarihana!",
-        anonymous_firstname: "Fanampiny anonyme"
+        anonymous_firstname: "Fanampiny anonyme",
+        countdown_text: "Mifarana afaka {time}",
+        countdown_ended: "Nifarana ny fanangonam-bola"
     }
 };
 

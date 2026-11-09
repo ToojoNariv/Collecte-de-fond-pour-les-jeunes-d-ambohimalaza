@@ -39,32 +39,37 @@
       </div>
     </header>
 
-    <!-- 2. Barre de recherche : sans fond, animation label flottant au focus/saisie -->
-    <div class="search-div-transparent">
-      <FloatLabel 
-        variant="in" 
-        :class="{ 'p-floatlabel-active': isSearchFocused || !!value2 }"
-      >
-        <InputText 
-          id="in_label" 
-          v-model="value2" 
-          class="w-full search-input-bold" 
-          autocomplete="off" 
-          @focus="isSearchFocused = true"
-          @blur="isSearchFocused = false"
-        />
-        <label for="in_label">
-          {{ $t('search_placeholder') }}
-        </label>
-      </FloatLabel>
-      <button 
-        v-if="value2" 
-        @click="value2 = ''" 
-        class="clear-search-btn" 
-        :title="$t('clear') || 'Effacer'"
-      >
-        <i class="pi pi-times"></i>
-      </button>
+    <!-- 2. Compte à rebours fin de collecte & Barre de recherche -->
+    <div class="search-section-wrapper">
+      <div class="countdown-banner">
+        <span class="countdown-text">{{ countdownDisplay }}</span>
+      </div>
+      <div class="search-div-transparent">
+        <FloatLabel 
+          variant="in" 
+          :class="{ 'p-floatlabel-active': isSearchFocused || !!value2 }"
+        >
+          <InputText 
+            id="in_label" 
+            v-model="value2" 
+            class="w-full search-input-bold" 
+            autocomplete="off" 
+            @focus="isSearchFocused = true"
+            @blur="isSearchFocused = false"
+          />
+          <label for="in_label">
+            {{ $t('search_placeholder') }}
+          </label>
+        </FloatLabel>
+        <button 
+          v-if="value2" 
+          @click="value2 = ''" 
+          class="clear-search-btn" 
+          :title="$t('clear') || 'Effacer'"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
     </div>
 
     <!-- 3. Tableau DataTable : s'adapte à l'espace restant (flex) avec scroll vertical interne -->
@@ -166,6 +171,34 @@ import LangSwitcher from '@/components/LangSwitcher.vue';
 import logoSvg from '@/assets/logo.svg';
 
 const { locale, t } = useI18n();
+
+// Compte à rebours fin de collecte : Mercredi 18 novembre 2026 à 06h00 (Madagascar UTC+3)
+const TARGET_END_DATE = new Date('2026-11-18T06:00:00+03:00').getTime();
+const countdownDisplay = ref('');
+let countdownInterval = null;
+
+const updateCountdown = () => {
+  const diff = TARGET_END_DATE - Date.now();
+  const dayUnit = locale.value === 'en' ? 'd' : 'j';
+
+  if (diff <= 0) {
+    const zeroTime = `0${dayUnit} 00h 00m 00s`;
+    countdownDisplay.value = t('countdown_text', { time: zeroTime });
+    return;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  const formattedTime = `${days}${dayUnit} ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+  countdownDisplay.value = t('countdown_text', { time: formattedTime });
+};
+
+watch(locale, () => {
+  updateCountdown();
+});
 
 // Variables du template
 const products = ref([]);
@@ -400,6 +433,9 @@ onMounted(() => {
   loadData();
   loadRemarques();
 
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+
   themeObserver = new MutationObserver(() => {
     checkDarkMode();
   });
@@ -412,6 +448,9 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (themeObserver) {
     themeObserver.disconnect();
+  }
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
   }
 });
 </script>
@@ -545,7 +584,54 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-/* 2. Barre de recherche compacte */
+/* 2. Barre de recherche & Compte à rebours fin de collecte */
+.search-section-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.countdown-banner {
+  width: 100%;
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  padding: 0.28rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  line-height: 1.25;
+  box-sizing: border-box;
+  user-select: none;
+  z-index: 2;
+}
+
+.countdown-text {
+  color: #ffffff !important;
+  font-weight: 700;
+  display: inline-block;
+}
+
+/* Collé au dessus de la barre de recherche : suppression des coins hauts de l'input */
+.search-section-wrapper .search-div-transparent .p-floatlabel input,
+.search-section-wrapper .search-div-transparent input.search-input-bold {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-left-radius: 14px !important;
+  border-bottom-right-radius: 14px !important;
+}
+
 .search-div-transparent {
   position: relative;
   width: 100%;
@@ -886,6 +972,13 @@ body.dark .loading-spinner-icon,
 /* RESPONSIVE : MOBILE (< 640px)                           */
 /* ======================================================== */
 @media (max-width: 640px) {
+  .countdown-banner {
+    padding: 0.22rem 0.65rem;
+    font-size: 0.76rem;
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+  }
+
   .clean-page-container {
     padding: 0.45rem 0.65rem 0.35rem;
     gap: 0.5rem;

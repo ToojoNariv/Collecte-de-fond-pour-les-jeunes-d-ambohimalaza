@@ -33,7 +33,18 @@
             class="total-amount" 
             :style="{ color: isDarkMode ? '#ffffff' : '#111111' }"
           >
-            {{ formatSomme(totalSomme) }}
+            <div class="total-odometer-flow">
+              <template v-for="item in sommeDisplaySlots" :key="item.key">
+                <span v-if="item.isSpacer" class="odometer-spacer"></span>
+                <RollingDigit 
+                  v-else 
+                  :value="item.digit" 
+                  :slot-width="'0.62em'"
+                  :slot-height="'1.15em'"
+                />
+              </template>
+              <span class="currency-suffix">Ar</span>
+            </div>
           </h1>
         </div>
       </div>
@@ -42,7 +53,45 @@
     <!-- 2. Compte à rebours fin de collecte & Barre de recherche -->
     <div class="search-section-wrapper">
       <div class="countdown-banner">
-        <span class="countdown-text">{{ countdownDisplay }}</span>
+        <span v-if="isCountdownEnded" class="countdown-text">
+          {{ $t('countdown_ended') }}
+        </span>
+        <div v-else class="countdown-inner-flow">
+          <span class="countdown-prefix">{{ countdownPrefix }}</span>
+          <div class="countdown-digits-cluster">
+            <!-- Jours -->
+            <span class="countdown-unit-cluster">
+              <RollingDigit 
+                v-for="(d, idx) in dayDigits" 
+                :key="'d-' + (dayDigits.length - 1 - idx)" 
+                :value="d"
+              />
+              <span class="countdown-letter">{{ dayUnit }}</span>
+            </span>
+
+            <!-- Heures -->
+            <span class="countdown-unit-cluster">
+              <RollingDigit :value="hourDigits[0]" key="h-tens" />
+              <RollingDigit :value="hourDigits[1]" key="h-ones" />
+              <span class="countdown-letter">h</span>
+            </span>
+
+            <!-- Minutes -->
+            <span class="countdown-unit-cluster">
+              <RollingDigit :value="minDigits[0]" key="m-tens" />
+              <RollingDigit :value="minDigits[1]" key="m-ones" />
+              <span class="countdown-letter">m</span>
+            </span>
+
+            <!-- Secondes -->
+            <span class="countdown-unit-cluster">
+              <RollingDigit :value="secDigits[0]" key="s-tens" />
+              <RollingDigit :value="secDigits[1]" key="s-ones" />
+              <span class="countdown-letter">s</span>
+            </span>
+          </div>
+          <span v-if="countdownSuffix" class="countdown-suffix">{{ countdownSuffix }}</span>
+        </div>
       </div>
       <div class="search-div-transparent">
         <FloatLabel 
@@ -171,37 +220,72 @@ import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { ProductService } from '@/service/ProductService';
 import LangSwitcher from '@/components/LangSwitcher.vue';
+import RollingDigit from '@/components/RollingDigit.vue';
 import logoSvg from '@/assets/logo.svg';
 
 const { locale, t } = useI18n();
 
 // Compte à rebours fin de collecte : Mercredi 18 novembre 2026 à 06h00 (Madagascar UTC+3)
 const TARGET_END_DATE = new Date('2026-11-18T06:00:00+03:00').getTime();
-const countdownDisplay = ref('');
+const isCountdownEnded = ref(false);
+const daysLeft = ref(0);
+const hoursLeft = ref(0);
+const minutesLeft = ref(0);
+const secondsLeft = ref(0);
+
+const dayDigits = computed(() => {
+  return String(daysLeft.value).split('').map(Number);
+});
+
+const hourDigits = computed(() => {
+  const h = Math.max(0, hoursLeft.value);
+  return [Math.floor(h / 10), h % 10];
+});
+
+const minDigits = computed(() => {
+  const m = Math.max(0, minutesLeft.value);
+  return [Math.floor(m / 10), m % 10];
+});
+
+const secDigits = computed(() => {
+  const s = Math.max(0, secondsLeft.value);
+  return [Math.floor(s / 10), s % 10];
+});
+
+const dayUnit = computed(() => (locale.value === 'en' ? 'd' : 'j'));
+
+const countdownPrefix = computed(() => {
+  const raw = t('countdown_text', { time: '___TIME___' });
+  const parts = raw.split('___TIME___');
+  return parts[0] || '';
+});
+
+const countdownSuffix = computed(() => {
+  const raw = t('countdown_text', { time: '___TIME___' });
+  const parts = raw.split('___TIME___');
+  return parts[1] || '';
+});
+
 let countdownInterval = null;
 
 const updateCountdown = () => {
   const diff = TARGET_END_DATE - Date.now();
-  const dayUnit = locale.value === 'en' ? 'd' : 'j';
 
   if (diff <= 0) {
-    const zeroTime = `0${dayUnit} 00h 00m 00s`;
-    countdownDisplay.value = t('countdown_text', { time: zeroTime });
+    isCountdownEnded.value = true;
+    daysLeft.value = 0;
+    hoursLeft.value = 0;
+    minutesLeft.value = 0;
+    secondsLeft.value = 0;
     return;
   }
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-  const formattedTime = `${days}${dayUnit} ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
-  countdownDisplay.value = t('countdown_text', { time: formattedTime });
+  isCountdownEnded.value = false;
+  daysLeft.value = Math.floor(diff / (1000 * 60 * 60 * 24));
+  hoursLeft.value = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  minutesLeft.value = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  secondsLeft.value = Math.floor((diff % (1000 * 60)) / 1000);
 };
-
-watch(locale, () => {
-  updateCountdown();
-});
 
 // Variables du template
 const products = ref([]);
@@ -210,6 +294,41 @@ const isSearchFocused = ref(false);
 const loading = ref(false);
 const totalSomme = ref(0);
 const totalCount = ref(0);
+
+// Suivi de la dernière somme vue par l'utilisateur pour l'odomètre
+const LAST_SEEN_SOMME_KEY = 'collecte_last_seen_somme';
+const lastSeenSomme = ref(null);
+const displayedSomme = ref(0);
+const targetSommeLen = ref(0);
+let hasInitializedSomme = false;
+
+try {
+  const saved = localStorage.getItem(LAST_SEEN_SOMME_KEY);
+  if (saved !== null && saved !== '' && !isNaN(Number(saved))) {
+    lastSeenSomme.value = Number(saved);
+    displayedSomme.value = Number(saved);
+    targetSommeLen.value = String(Math.max(0, Math.round(Number(saved)))).length;
+  }
+} catch (e) {
+  console.warn('localStorage non accessible:', e);
+}
+
+const sommeDisplaySlots = computed(() => {
+  const str = String(Math.max(0, Math.round(displayedSomme.value)));
+  const len = Math.max(str.length, targetSommeLen.value);
+  const padded = str.padStart(len, '0');
+
+  const slots = [];
+  for (let i = 0; i < len; i++) {
+    const digit = parseInt(padded[i], 10);
+    const distFromRight = len - 1 - i;
+    slots.push({ isSpacer: false, digit, key: 'pos-' + distFromRight });
+    if (distFromRight > 0 && distFromRight % 3 === 0) {
+      slots.push({ isSpacer: true, key: 'space-' + distFromRight });
+    }
+  }
+  return slots;
+});
 
 // Remarques dynamiques
 const remarques = ref([]);
@@ -360,8 +479,52 @@ const loadData = async (query = '') => {
   try {
     const response = await ProductService.getDonations(query);
     products.value = response.data || [];
-    totalSomme.value = response.totalSomme || 0;
+    const newTotal = response.totalSomme || 0;
+    totalSomme.value = newTotal;
     totalCount.value = response.totalCount || 0;
+
+    const newLen = String(newTotal).length;
+
+    if (!hasInitializedSomme) {
+      hasInitializedSomme = true;
+      if (lastSeenSomme.value !== null) {
+        if (lastSeenSomme.value !== newTotal) {
+          // La somme a changé par rapport à la dernière somme vue par l'utilisateur
+          targetSommeLen.value = Math.max(String(lastSeenSomme.value).length, newLen);
+          displayedSomme.value = lastSeenSomme.value;
+          setTimeout(() => {
+            displayedSomme.value = newTotal;
+            targetSommeLen.value = newLen;
+            try {
+              localStorage.setItem(LAST_SEEN_SOMME_KEY, String(newTotal));
+            } catch (e) {}
+          }, 120);
+        } else {
+          // Somme inchangée : affichage direct sans roulement
+          displayedSomme.value = newTotal;
+          targetSommeLen.value = newLen;
+        }
+      } else {
+        // Première visite (aucune somme vue au préalable) : départ de 0 puis roulement vers newTotal
+        targetSommeLen.value = newLen;
+        displayedSomme.value = 0;
+        setTimeout(() => {
+          displayedSomme.value = newTotal;
+          try {
+            localStorage.setItem(LAST_SEEN_SOMME_KEY, String(newTotal));
+          } catch (e) {}
+        }, 120);
+      }
+    } else {
+      // Déjà initialisé durant la session courante : si la somme globale évolue
+      if (displayedSomme.value !== newTotal) {
+        targetSommeLen.value = Math.max(targetSommeLen.value, newLen);
+        displayedSomme.value = newTotal;
+        try {
+          localStorage.setItem(LAST_SEEN_SOMME_KEY, String(newTotal));
+        } catch (e) {}
+      }
+    }
   } catch (err) {
     console.error('Erreur lors du chargement des contributions:', err);
   } finally {
@@ -587,6 +750,27 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
+.total-odometer-flow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.odometer-spacer {
+  display: inline-block;
+  width: 0.35em;
+  flex-shrink: 0;
+}
+
+.currency-suffix {
+  margin-left: 0.28em;
+  font-size: 0.88em;
+  font-weight: 800;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 /* 2. Barre de recherche & Compte à rebours fin de collecte */
 .search-section-wrapper {
   width: 100%;
@@ -623,6 +807,42 @@ onBeforeUnmount(() => {
   margin: 0 auto;
 }
 
+.countdown-inner-flow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.countdown-prefix,
+.countdown-suffix {
+  color: inherit;
+  font-weight: inherit;
+  white-space: nowrap;
+}
+
+.countdown-digits-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.countdown-unit-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.02rem;
+  white-space: nowrap;
+}
+
+.countdown-letter {
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  margin-left: 0.04rem;
+}
+
 .countdown-text {
   color: #ffffff !important;
   font-weight: 700;
@@ -640,7 +860,22 @@ body.dark .countdown-banner,
 
 html.dark .countdown-text,
 body.dark .countdown-text,
-.dark .countdown-text {
+.dark .countdown-text,
+html.dark .countdown-inner-flow,
+body.dark .countdown-inner-flow,
+.dark .countdown-inner-flow,
+html.dark .countdown-prefix,
+body.dark .countdown-prefix,
+.dark .countdown-prefix,
+html.dark .countdown-digits-cluster,
+body.dark .countdown-digits-cluster,
+.dark .countdown-digits-cluster,
+html.dark .countdown-unit-cluster,
+body.dark .countdown-unit-cluster,
+.dark .countdown-unit-cluster,
+html.dark .countdown-letter,
+body.dark .countdown-letter,
+.dark .countdown-letter {
   color: #000000 !important;
   font-weight: 800 !important;
 }
@@ -1021,6 +1256,14 @@ body.dark .loading-spinner-icon,
     font-size: 0.76rem;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+  }
+
+  .countdown-digits-cluster {
+    gap: 0.22rem;
+  }
+
+  .countdown-inner-flow {
+    gap: 0.18rem;
   }
 
   .clean-page-container {

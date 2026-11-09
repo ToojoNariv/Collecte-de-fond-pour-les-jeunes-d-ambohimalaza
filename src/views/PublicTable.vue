@@ -589,6 +589,7 @@ onBeforeUnmount(() => {
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
   flex-shrink: 0;
   position: relative;
   margin: 0;
@@ -596,15 +597,16 @@ onBeforeUnmount(() => {
 }
 
 .countdown-banner {
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   background: #000000 !important;
   color: #ffffff !important;
   border-top-left-radius: 14px;
   border-top-right-radius: 14px;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  padding: 0.28rem 1rem;
-  display: flex;
+  padding: 0.28rem 1.25rem;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -615,21 +617,14 @@ onBeforeUnmount(() => {
   box-sizing: border-box;
   user-select: none;
   z-index: 2;
+  margin: 0 auto;
 }
 
 .countdown-text {
   color: #ffffff !important;
   font-weight: 700;
   display: inline-block;
-}
-
-/* Collé au dessus de la barre de recherche : suppression des coins hauts de l'input */
-.search-section-wrapper .search-div-transparent .p-floatlabel input,
-.search-section-wrapper .search-div-transparent input.search-input-bold {
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
-  border-bottom-left-radius: 14px !important;
-  border-bottom-right-radius: 14px !important;
+  white-space: nowrap;
 }
 
 .search-div-transparent {

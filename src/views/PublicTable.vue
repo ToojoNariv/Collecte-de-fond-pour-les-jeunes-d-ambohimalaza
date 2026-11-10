@@ -185,6 +185,15 @@
           </template>
         </Column>
 
+        <!-- Colonne Date d'enregistrement (Daty nampidirana) -->
+        <Column field="createdAt" :header="$t('date_saisie')" sortable class="date-col" style="white-space: nowrap;">
+          <template #body="slotProps">
+            <div class="date-cell">
+              {{ formatDate(slotProps.data.createdAt || slotProps.data.date) }}
+            </div>
+          </template>
+        </Column>
+
         <Column field="somme" :header="$t('col_somme')" sortable class="somme-col" style="white-space: nowrap;">
           <template #body="slotProps">
             <div class="somme-cell">
@@ -365,6 +374,36 @@ const formatSomme = (amount) => {
   }).format(amount) + '\u00A0Ar';
 };
 
+// Formatage de la date d'enregistrement
+// Format demandé : "00 Nov/18h30m" (mg, fr), "Nov 00/ 6:30pm" (en)
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '-';
+
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours24 = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+
+  const mgMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'Mey', 'Jon', 'Jol', 'Aog', 'Sep', 'Okt', 'Nov', 'Des'];
+  const frMonths = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+  const enMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  const monthIdx = d.getMonth();
+
+  if (locale.value === 'en') {
+    const month = enMonths[monthIdx];
+    let h = d.getHours();
+    const ampm = h >= 12 ? 'pm' : 'am';
+    h = h % 12;
+    h = h ? h : 12;
+    return `${month} ${day}/ ${h}:${minutes}${ampm}`;
+  }
+
+  const month = locale.value === 'fr' ? frMonths[monthIdx] : mgMonths[monthIdx];
+  return `${day} ${month}/${hours24}h${minutes}m`;
+};
+
 // Formatage et masquage confidentiel des numéros de téléphone et contacts
 const formatContact = (contact) => {
   if (!contact || typeof contact !== 'string') return '* ** ** *** **';
@@ -537,13 +576,14 @@ const filteredProducts = computed(() => {
     const contactRaw = (item.contact || '').toLowerCase();
     const contactCleaned = contactRaw.replace(/\s+/g, '');
     const contactMasked = formatContact(item.contact).toLowerCase();
+    const dateFormatted = formatDate(item.createdAt || item.date).toLowerCase();
 
     return parts.every((p) => {
       const pLower = p.toLowerCase();
       const pCleanDigits = pLower.replace(/\s+/g, '');
 
       if (pLower === 'd') {
-        return /\d/.test(contactRaw) || nom.includes('d') || prenom.includes('d');
+        return /\d/.test(contactRaw) || nom.includes('d') || prenom.includes('d') || dateFormatted.includes('d');
       }
 
       return (
@@ -551,6 +591,7 @@ const filteredProducts = computed(() => {
         prenom.includes(pLower) ||
         contactRaw.includes(pLower) ||
         contactMasked.includes(pLower) ||
+        dateFormatted.includes(pLower) ||
         (pCleanDigits && contactCleaned.includes(pCleanDigits))
       );
     });
@@ -967,6 +1008,24 @@ body.dark .row-index-badge,
   white-space: nowrap !important;
 }
 
+.date-col {
+  white-space: nowrap !important;
+}
+
+.date-cell {
+  font-weight: 600;
+  font-size: 0.90rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  white-space: nowrap !important;
+  color: #555555;
+}
+
+body.dark .date-cell,
+.dark .date-cell {
+  color: #cccccc !important;
+}
+
 .somme-col {
   white-space: nowrap !important;
 }
@@ -1353,7 +1412,8 @@ body.dark .loading-spinner-icon,
   }
 
   .prenom-cell,
-  .contact-cell {
+  .contact-cell,
+  .date-cell {
     font-size: 0.84rem;
   }
 

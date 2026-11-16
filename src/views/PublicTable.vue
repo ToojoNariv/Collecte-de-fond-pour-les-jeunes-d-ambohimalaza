@@ -332,9 +332,12 @@ const route = useRoute();
 const TARGET_END_DATE = new Date('2026-11-18T18:00:00+03:00').getTime();
 const isCountdownEnded = ref(false);
 
-// Mode fin de collecte (actif quand le compte à rebours est expiré ou via ?ended=true pour prévisualisation)
+// Mode fin de collecte (actif quand le compte à rebours est expiré, via /merci, ou via ?ended=true pour prévisualisation)
 const isCampaignEnded = computed(() => {
-  return isCountdownEnded.value || route?.query?.ended === 'true' || route?.query?.preview === 'ended';
+  return isCountdownEnded.value || 
+         route?.path === '/merci' || 
+         route?.query?.ended === 'true' || 
+         route?.query?.preview === 'ended';
 });
 const daysLeft = ref(0);
 const hoursLeft = ref(0);

@@ -10,6 +10,12 @@ const routes = [
         meta: { title: 'Tableau des Contributions - Collecte Ambohimalaza' }
     },
     {
+        path: '/merci',
+        name: 'Merci',
+        component: PublicTable,
+        meta: { title: 'Remerciements - Collecte Ambohimalaza' }
+    },
+    {
         path: '/neny-mampiditra-saisi',
         name: 'NenyMampiditraSaisi',
         component: NenyMampiditraSaisi,

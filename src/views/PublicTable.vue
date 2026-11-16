@@ -1,13 +1,14 @@
 <template>
   <div class="clean-page-container">
     <!-- 1. En-tête : Logo GÉANT à gauche, Contrôles en haut à droite, et Somme totale augmentée à droite -->
-    <header class="hero-top-header">
+    <header class="hero-top-header" :class="{ 'hero-top-header-ended': isCampaignEnded }">
       <!-- Colonne Gauche : Logo tout à gauche -->
       <div class="logo-hero-side">
         <img 
           :src="logoSvg" 
           alt="Justice pour les jeunes" 
           class="header-logo-hero" 
+          :class="{ 'header-logo-ended': isCampaignEnded }"
           :style="{ filter: isDarkMode ? 'brightness(0) invert(1)' : 'brightness(0)' }"
         />
       </div>
@@ -1444,43 +1445,53 @@ body.dark .loading-spinner-icon,
 /* ======================================================== */
 /* PAGE DE REMERCIEMENT (Quand le compte à rebours est fini) */
 /* ======================================================== */
+.hero-top-header-ended {
+  min-height: auto;
+  padding: 0.15rem 0 0.1rem;
+  margin-bottom: 0;
+}
+
+.header-logo-ended {
+  height: clamp(52px, 7vh, 72px) !important;
+}
+
 .thanks-hero-center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0.25rem 0 0.45rem;
+  padding: 0.15rem 0 0.25rem;
   flex-shrink: 0;
   width: 100%;
 }
 
 .thanks-total-label {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #888888;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.1rem;
 }
 
 .thanks-total-amount {
-  font-size: clamp(2.4rem, 5.5vw, 3.4rem);
+  font-size: clamp(2rem, 4.2vw, 2.75rem);
   font-weight: 900;
-  line-height: 1.1;
+  line-height: 1.05;
   letter-spacing: -0.03em;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .thanks-phrase-text {
-  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
   font-weight: 700;
   color: #111111;
   margin: 0;
-  line-height: 1.35;
+  line-height: 1.3;
   max-width: 820px;
 }
 
@@ -1490,21 +1501,21 @@ body.dark .thanks-phrase-text,
   color: #f3f4f6;
 }
 
-/* Zone scrollable contenant la grille des participants */
+/* Zone scrollable contenant la grille des participants : s'adapte strictement au reste de l'écran */
 .thanks-names-wrapper {
   flex: 1 1 0;
-  min-height: 140px;
+  min-height: 0; /* Empêche le flex child d'engendrer un scroll de page */
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0.5rem 0.25rem 1rem;
+  padding: 0.35rem 0.25rem 0.5rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(180, 136, 45, 0.45) transparent;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 24px), transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 24px), transparent 100%);
+  scrollbar-color: rgba(200, 160, 60, 0.45) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
 }
 
 .thanks-names-wrapper::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .thanks-names-wrapper::-webkit-scrollbar-track {
@@ -1512,7 +1523,7 @@ body.dark .thanks-phrase-text,
 }
 
 .thanks-names-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(180, 136, 45, 0.45);
+  background: rgba(200, 160, 60, 0.45);
   border-radius: 9999px;
 }
 
@@ -1520,112 +1531,119 @@ body.dark .thanks-phrase-text,
 .thanks-names-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.85rem 1rem;
+  gap: 0.55rem 0.75rem;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Lingot doré ultra-réaliste */
+/* Lingot d'or ultra-réaliste (texture or brossé satiné 24k) */
 .ultra-gold-box {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 22px;
-  border-radius: 12px;
+  padding: 10px 16px;
+  border-radius: 9px;
   overflow: hidden; /* Garde le flash à l'intérieur du bloc */
   box-sizing: border-box;
   width: 100%;
-  min-height: 56px;
+  min-height: 44px;
   text-align: center;
 
-  /* 1. Texture dorée brossée + Dégradé métallique riche */
+  /* 1. Texture or satiné brossé avec reflet réaliste et dégradé métallique riche */
   background-image: 
+    radial-gradient(ellipse at 50% -15%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 65%),
     repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.06) 0px,
-      rgba(255, 255, 255, 0.06) 1px,
+      90deg,
+      rgba(255, 255, 255, 0.04) 0px,
+      rgba(255, 255, 255, 0.04) 1px,
       transparent 1px,
-      transparent 3px,
-      rgba(0, 0, 0, 0.05) 3px,
-      rgba(0, 0, 0, 0.05) 4px
+      transparent 2px
     ),
     linear-gradient(
-      135deg,
-      #8a6421 0%,
-      #d4af37 22%,
-      #fef1c9 45%,
-      #d4af37 55%,
-      #9b7226 78%,
-      #f7e094 100%
+      112deg,
+      #c59b27 0%,
+      #e9c565 16%,
+      #fff4b8 32%,
+      #dfb140 48%,
+      #f7d77b 68%,
+      #c49926 86%,
+      #b88a18 100%
     );
 
-  /* Bordure biseautée et ombres pour l'effet lingot 3D */
-  border: 1px solid #fbe6a2;
+  /* Bordure biseautée dorée et ombrage raffiné sans drop-shadow excessif */
+  border: 1px solid #ebd380;
   box-shadow: 
-    inset 0 2px 3px rgba(255, 255, 255, 0.8),
-    inset 0 -2px 4px rgba(110, 75, 15, 0.7),
-    0 10px 24px -5px rgba(180, 136, 45, 0.5),
-    0 4px 10px rgba(0, 0, 0, 0.28);
+    inset 0 1px 1px rgba(255, 255, 255, 0.75),
+    inset 0 -1px 2px rgba(120, 80, 15, 0.35),
+    0 2px 5px rgba(0, 0, 0, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.ultra-gold-box:hover {
-  transform: translateY(-2px);
+html.dark .ultra-gold-box,
+body.dark .ultra-gold-box,
+.dark .ultra-gold-box {
+  border-color: #d1a843;
   box-shadow: 
-    inset 0 2px 3px rgba(255, 255, 255, 0.9),
-    inset 0 -2px 4px rgba(110, 75, 15, 0.8),
-    0 14px 28px -4px rgba(180, 136, 45, 0.65),
-    0 6px 14px rgba(0, 0, 0, 0.35);
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 2px rgba(60, 40, 5, 0.4),
+    0 3px 8px rgba(0, 0, 0, 0.35);
 }
 
-/* 2. Texte avec effet gravé dans l'or */
+.ultra-gold-box:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.85),
+    inset 0 -1px 2px rgba(120, 80, 15, 0.45),
+    0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* 2. Typographie moderne, nette et lisible (Plus Jakarta Sans au lieu du Cinzel) */
 .gold-text {
   position: relative;
   z-index: 2;
-  font-family: 'Cinzel', 'Georgia', serif;
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 2px;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #3d2806;
-  text-shadow: 
-    0 1px 1px rgba(255, 255, 255, 0.75),
-    0 -1px 1px rgba(0, 0, 0, 0.3);
+  color: #382405;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
   line-height: 1.25;
   text-align: center;
   word-break: break-word;
 }
 
-/* 3. Animation de flash lumineux traversant la largeur */
+/* 3. Animation de flash lumineux délicat et non agressif */
 .ultra-gold-box::after {
   content: "";
   position: absolute;
   top: 0;
-  left: -150%;
-  width: 65%;
+  left: -120%;
+  width: 30%;
   height: 100%;
   z-index: 1;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0.22) 50%,
     transparent 100%
   );
-  transform: skewX(-25deg);
-  animation: gold-flash 4.5s infinite ease-in-out;
+  transform: skewX(-22deg);
+  animation: gold-flash 7.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
 @keyframes gold-flash {
   0% {
-    left: -150%;
+    left: -120%;
   }
-  35% {
-    left: 160%; /* Traverse le div en ~1.5s */
+  24% {
+    left: 150%; /* Traverse délicatement le lingot */
   }
   100% {
-    left: 160%; /* Pause avant le prochain reflet */
+    left: 150%; /* Pause longue avant le prochain reflet */
   }
 }
 
@@ -1636,11 +1654,11 @@ body.dark .thanks-phrase-text,
   align-items: center;
   width: 100%;
   flex-shrink: 0;
-  padding: 0.35rem 0 0.15rem;
+  padding: 0.2rem 0 0.1rem;
 }
 
 .closure-banner {
-  border-radius: 9px !important;
+  border-radius: 8px !important;
 }
 
 /* ======================================================== */
@@ -1853,48 +1871,52 @@ body.dark .thanks-phrase-text,
   }
 
   /* Page de Remerciement sur Mobile */
+  .header-logo-ended {
+    height: clamp(44px, 11vw, 54px) !important;
+  }
+
   .thanks-hero-center {
-    padding: 0.15rem 0 0.3rem;
+    padding: 0.1rem 0 0.15rem;
   }
 
   .thanks-total-amount {
-    font-size: clamp(1.8rem, 7.5vw, 2.35rem);
-    margin-bottom: 0.3rem;
+    font-size: clamp(1.7rem, 6.5vw, 2.1rem);
+    margin-bottom: 0.2rem;
   }
 
   .thanks-phrase-text {
-    font-size: 0.88rem;
-    line-height: 1.35;
-    padding: 0 0.2rem;
+    font-size: 0.85rem;
+    line-height: 1.25;
+    padding: 0 0.15rem;
   }
 
   .thanks-names-wrapper {
-    padding: 0.35rem 0.1rem 0.5rem;
+    padding: 0.2rem 0.1rem 0.35rem;
   }
 
   .thanks-names-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem 0.5rem;
+    gap: 0.4rem 0.45rem;
   }
 
   .ultra-gold-box {
-    padding: 9px 8px;
-    min-height: 44px;
-    border-radius: 9px;
+    padding: 7px 8px;
+    min-height: 38px;
+    border-radius: 7px;
   }
 
   .gold-text {
-    font-size: 0.76rem;
-    letter-spacing: 1px;
-    line-height: 1.2;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
   }
 
   .closure-countdown-footer {
-    padding: 0.2rem 0 0.1rem;
+    padding: 0.15rem 0 0.05rem;
   }
 
   .closure-banner {
-    border-radius: 8px !important;
+    border-radius: 7px !important;
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="app-root">
-    <!-- Barre supérieure : affichée UNIQUEMENT sur les pages secondaires (ex: /neny-mampiditra-saisi) -->
-    <header v-if="$route.path !== '/'" class="minimal-topbar">
+    <!-- Barre supérieure : affichée UNIQUEMENT sur la page de saisie secrète (/neny-mampiditra-saisi) -->
+    <header v-if="$route.path === '/neny-mampiditra-saisi'" class="minimal-topbar">
       <div class="topbar-container">
         <!-- Bouton retour présent UNIQUEMENT si on est sur la page de saisie secrète -->
         <router-link 

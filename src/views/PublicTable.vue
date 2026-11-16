@@ -26,8 +26,8 @@
           <LangSwitcher />
         </div>
 
-        <!-- Somme totale : Taille augmentée et mise en valeur -->
-        <div class="total-compact-box">
+        <!-- Somme totale : Uniquement affichée ici si la campagne est EN COURS -->
+        <div v-if="!isCampaignEnded" class="total-compact-box">
           <span class="total-label">{{ $t('total_collected') }}</span>
           <h1 
             class="total-amount" 
@@ -50,193 +50,292 @@
       </div>
     </header>
 
-    <!-- 2. Compte à rebours fin de collecte & Barre de recherche -->
-    <div class="search-section-wrapper">
-      <div class="countdown-banner">
-        <span v-if="isCountdownEnded" class="countdown-text">
-          {{ $t('countdown_ended') }}
-        </span>
-        <div v-else class="countdown-inner-flow">
-          <span class="countdown-prefix">{{ countdownPrefix }}</span>
-          <div class="countdown-digits-cluster">
-            <!-- Jours -->
-            <span class="countdown-unit-cluster">
-              <RollingDigit 
-                v-for="(d, idx) in dayDigits" 
-                :key="'d-' + (dayDigits.length - 1 - idx)" 
-                :value="d"
-              />
-              <span class="countdown-letter">{{ dayUnit }}</span>
-            </span>
+    <!-- ======================================================== -->
+    <!-- CAS A : COLLECTE EN COURS (Avant la fin du compte à rebours) -->
+    <!-- ======================================================== -->
+    <template v-if="!isCampaignEnded">
+      <!-- 2. Compte à rebours fin de collecte & Barre de recherche -->
+      <div class="search-section-wrapper">
+        <div class="countdown-banner">
+          <span v-if="isCountdownEnded" class="countdown-text">
+            {{ $t('countdown_ended') }}
+          </span>
+          <div v-else class="countdown-inner-flow">
+            <span class="countdown-prefix">{{ countdownPrefix }}</span>
+            <div class="countdown-digits-cluster">
+              <!-- Jours -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit 
+                  v-for="(d, idx) in dayDigits" 
+                  :key="'d-' + (dayDigits.length - 1 - idx)" 
+                  :value="d"
+                />
+                <span class="countdown-letter">{{ dayUnit }}</span>
+              </span>
 
-            <!-- Heures -->
-            <span class="countdown-unit-cluster">
-              <RollingDigit :value="hourDigits[0]" key="h-tens" />
-              <RollingDigit :value="hourDigits[1]" key="h-ones" />
-              <span class="countdown-letter">h</span>
-            </span>
+              <!-- Heures -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit :value="hourDigits[0]" key="h-tens" />
+                <RollingDigit :value="hourDigits[1]" key="h-ones" />
+                <span class="countdown-letter">h</span>
+              </span>
 
-            <!-- Minutes -->
-            <span class="countdown-unit-cluster">
-              <RollingDigit :value="minDigits[0]" key="m-tens" />
-              <RollingDigit :value="minDigits[1]" key="m-ones" />
-              <span class="countdown-letter">m</span>
-            </span>
+              <!-- Minutes -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit :value="minDigits[0]" key="m-tens" />
+                <RollingDigit :value="minDigits[1]" key="m-ones" />
+                <span class="countdown-letter">m</span>
+              </span>
 
-            <!-- Secondes -->
-            <span class="countdown-unit-cluster">
-              <RollingDigit :value="secDigits[0]" key="s-tens" />
-              <RollingDigit :value="secDigits[1]" key="s-ones" />
-              <span class="countdown-letter">s</span>
-            </span>
+              <!-- Secondes -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit :value="secDigits[0]" key="s-tens" />
+                <RollingDigit :value="secDigits[1]" key="s-ones" />
+                <span class="countdown-letter">s</span>
+              </span>
+            </div>
+            <span v-if="countdownSuffix" class="countdown-suffix">{{ countdownSuffix }}</span>
           </div>
-          <span v-if="countdownSuffix" class="countdown-suffix">{{ countdownSuffix }}</span>
+        </div>
+        <div class="search-div-transparent">
+          <FloatLabel 
+            variant="in" 
+            :class="{ 'p-floatlabel-active': isSearchFocused || !!value2 }"
+          >
+            <InputText 
+              id="in_label" 
+              v-model="value2" 
+              class="w-full search-input-bold" 
+              autocomplete="off" 
+              @focus="isSearchFocused = true"
+              @blur="isSearchFocused = false"
+            />
+            <label for="in_label">
+              {{ $t('search_placeholder') }}
+            </label>
+          </FloatLabel>
+          <button 
+            v-if="value2" 
+            @click="value2 = ''" 
+            class="clear-search-btn" 
+            :title="$t('clear') || 'Effacer'"
+          >
+            <i class="pi pi-times"></i>
+          </button>
         </div>
       </div>
-      <div class="search-div-transparent">
-        <FloatLabel 
-          variant="in" 
-          :class="{ 'p-floatlabel-active': isSearchFocused || !!value2 }"
+
+      <!-- 3. Tableau DataTable : s'adapte à l'espace restant (flex) avec scroll vertical interne -->
+      <div class="table-wrapper">
+        <DataTable 
+          :value="filteredProducts" 
+          tableStyle="min-width: 30rem"
+          scrollable 
+          scrollHeight="flex"
+          responsiveLayout="scroll"
+          :loading="loading"
+          stripedRows
+          class="p-datatable-flex-scroll"
         >
-          <InputText 
-            id="in_label" 
-            v-model="value2" 
-            class="w-full search-input-bold" 
-            autocomplete="off" 
-            @focus="isSearchFocused = true"
-            @blur="isSearchFocused = false"
-          />
-          <label for="in_label">
-            {{ $t('search_placeholder') }}
-          </label>
-        </FloatLabel>
-        <button 
-          v-if="value2" 
-          @click="value2 = ''" 
-          class="clear-search-btn" 
-          :title="$t('clear') || 'Effacer'"
+          <template #empty>
+            <div class="empty-state" v-if="!loading">
+              <i class="pi pi-search-minus empty-icon"></i>
+              <p class="empty-title">{{ $t('empty_title') }}</p>
+              <p class="empty-desc" v-if="value2">
+                {{ $t('empty_search') }} "<strong>{{ value2 }}</strong>".
+              </p>
+              <p class="empty-desc" v-else>
+                {{ $t('empty_no_data') }}
+              </p>
+            </div>
+          </template>
+
+          <template #loading>
+            <div class="loading-state">
+              <i class="pi pi-spin pi-spinner loading-spinner-icon"></i>
+              <span class="loading-text">{{ $t('loading') }}</span>
+            </div>
+          </template>
+
+          <!-- Colonne Index incrémenté (sans titre) -->
+          <Column header="" class="index-col" style="width: 3.5rem; text-align: center;">
+            <template #body="slotProps">
+              <span class="row-index-badge">{{ slotProps.index + 1 }}</span>
+            </template>
+          </Column>
+
+          <!-- Colonnes : Nom (majuscules), Prénom (ou 'Prénom anonyme'), Contact masqué, Somme en Ar (nowrap) -->
+          <Column field="nom" :header="$t('col_nom')" sortable>
+            <template #body="slotProps">
+              <div class="name-cell">
+                {{ (slotProps.data.nom || '').toUpperCase() }}
+              </div>
+            </template>
+          </Column>
+
+          <Column field="prenom" :header="$t('col_prenom')" sortable>
+            <template #body="slotProps">
+              <div class="prenom-cell" :class="{ 'prenom-anonyme': !slotProps.data.prenom || !slotProps.data.prenom.trim() }">
+                {{ slotProps.data.prenom && slotProps.data.prenom.trim() ? slotProps.data.prenom : ($t('anonymous_firstname') || 'Prénom anonyme') }}
+              </div>
+            </template>
+          </Column>
+
+          <Column field="contact" :header="$t('col_contact')" sortable>
+            <template #body="slotProps">
+              <div class="contact-cell">
+                {{ formatContact(slotProps.data.contact) }}
+              </div>
+            </template>
+          </Column>
+
+          <!-- Colonne Date d'enregistrement (Daty nampidirana) -->
+          <Column field="createdAt" :header="$t('date_saisie')" sortable class="date-col" style="white-space: nowrap;">
+            <template #body="slotProps">
+              <div class="date-cell">
+                {{ formatDate(slotProps.data.createdAt || slotProps.data.date) }}
+              </div>
+            </template>
+          </Column>
+
+          <Column field="somme" :header="$t('col_somme')" sortable class="somme-col" style="white-space: nowrap;">
+            <template #body="slotProps">
+              <div class="somme-cell">
+                {{ formatSomme(slotProps.data.somme) }}
+              </div>
+            </template>
+          </Column>
+        </DataTable>
+      </div>
+
+      <!-- 4. Section Remarques : scrollable sans scrollbar avec dégradé d'opacité 0 en bas -->
+      <section v-if="remarques && remarques.length > 0" class="remarques-section">
+        <div class="remarques-header">
+          <h3 class="remarques-heading">{{ $t('remarques_title') }}</h3>
+          <span class="remarque-transfert-badge">
+            {{ $t('remarque_transfert_rappel') }}
+          </span>
+        </div>
+        <div class="remarques-scroll-box">
+          <ul class="remarques-list">
+            <li v-for="item in remarques" :key="item._id" class="remarque-point">
+              <span class="bullet-dash">–</span>
+              <span class="remarque-text">{{ getRemarqueText(item) }}</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </template>
+
+    <!-- ======================================================== -->
+    <!-- CAS B : PAGE DE REMERCIEMENT (Quand le compte à rebours est fini) -->
+    <!-- ======================================================== -->
+    <template v-else>
+      <!-- Zone Centrale : Total récolté au milieu + Phrase de remerciement -->
+      <div class="thanks-hero-center">
+        <span class="thanks-total-label">{{ $t('total_collected') }}</span>
+        <h1 
+          class="thanks-total-amount" 
+          :style="{ color: isDarkMode ? '#ffffff' : '#111111' }"
         >
-          <i class="pi pi-times"></i>
-        </button>
-      </div>
-    </div>
-
-    <!-- 3. Tableau DataTable : s'adapte à l'espace restant (flex) avec scroll vertical interne -->
-    <div class="table-wrapper">
-      <DataTable 
-        :value="filteredProducts" 
-        tableStyle="min-width: 30rem"
-        scrollable 
-        scrollHeight="flex"
-        responsiveLayout="scroll"
-        :loading="loading"
-        stripedRows
-        class="p-datatable-flex-scroll"
-      >
-        <template #empty>
-          <div class="empty-state" v-if="!loading">
-            <i class="pi pi-search-minus empty-icon"></i>
-            <p class="empty-title">{{ $t('empty_title') }}</p>
-            <p class="empty-desc" v-if="value2">
-              {{ $t('empty_search') }} "<strong>{{ value2 }}</strong>".
-            </p>
-            <p class="empty-desc" v-else>
-              {{ $t('empty_no_data') }}
-            </p>
+          <div class="total-odometer-flow">
+            <template v-for="item in sommeDisplaySlots" :key="item.key">
+              <span v-if="item.isSpacer" class="odometer-spacer"></span>
+              <RollingDigit 
+                v-else 
+                :value="item.digit" 
+                :slot-width="'0.62em'"
+                :slot-height="'1.15em'"
+              />
+            </template>
+            <span class="currency-suffix">Ar</span>
           </div>
-        </template>
+        </h1>
+        <p class="thanks-phrase-text">{{ $t('thanks_phrase') }}</p>
+      </div>
 
-        <template #loading>
-          <div class="loading-state">
-            <i class="pi pi-spin pi-spinner loading-spinner-icon"></i>
-            <span class="loading-text">{{ $t('loading') }}</span>
+      <!-- Tableau à double colonne sans titre : noms des participants sur fond doré ultra réaliste -->
+      <div class="thanks-names-wrapper">
+        <div class="thanks-names-grid">
+          <div 
+            v-for="(donor, idx) in participantNames" 
+            :key="idx" 
+            class="ultra-gold-box"
+            :style="{ animationDelay: `${(idx % 6) * 0.75}s` }"
+          >
+            <span class="gold-text">{{ donor }}</span>
           </div>
-        </template>
-
-        <!-- Colonne Index incrémenté (sans titre) -->
-        <Column header="" class="index-col" style="width: 3.5rem; text-align: center;">
-          <template #body="slotProps">
-            <span class="row-index-badge">{{ slotProps.index + 1 }}</span>
-          </template>
-        </Column>
-
-        <!-- Colonnes : Nom (majuscules), Prénom (ou 'Prénom anonyme'), Contact masqué, Somme en Ar (nowrap) -->
-        <Column field="nom" :header="$t('col_nom')" sortable>
-          <template #body="slotProps">
-            <div class="name-cell">
-              {{ (slotProps.data.nom || '').toUpperCase() }}
-            </div>
-          </template>
-        </Column>
-
-        <Column field="prenom" :header="$t('col_prenom')" sortable>
-          <template #body="slotProps">
-            <div class="prenom-cell" :class="{ 'prenom-anonyme': !slotProps.data.prenom || !slotProps.data.prenom.trim() }">
-              {{ slotProps.data.prenom && slotProps.data.prenom.trim() ? slotProps.data.prenom : ($t('anonymous_firstname') || 'Prénom anonyme') }}
-            </div>
-          </template>
-        </Column>
-
-        <Column field="contact" :header="$t('col_contact')" sortable>
-          <template #body="slotProps">
-            <div class="contact-cell">
-              {{ formatContact(slotProps.data.contact) }}
-            </div>
-          </template>
-        </Column>
-
-        <!-- Colonne Date d'enregistrement (Daty nampidirana) -->
-        <Column field="createdAt" :header="$t('date_saisie')" sortable class="date-col" style="white-space: nowrap;">
-          <template #body="slotProps">
-            <div class="date-cell">
-              {{ formatDate(slotProps.data.createdAt || slotProps.data.date) }}
-            </div>
-          </template>
-        </Column>
-
-        <Column field="somme" :header="$t('col_somme')" sortable class="somme-col" style="white-space: nowrap;">
-          <template #body="slotProps">
-            <div class="somme-cell">
-              {{ formatSomme(slotProps.data.somme) }}
-            </div>
-          </template>
-        </Column>
-      </DataTable>
-    </div>
-
-    <!-- 4. Section Remarques : scrollable sans scrollbar avec dégradé d'opacité 0 en bas -->
-    <section v-if="remarques && remarques.length > 0" class="remarques-section">
-      <div class="remarques-header">
-        <h3 class="remarques-heading">{{ $t('remarques_title') }}</h3>
-        <span class="remarque-transfert-badge">
-          {{ $t('remarque_transfert_rappel') }}
-        </span>
+        </div>
       </div>
-      <div class="remarques-scroll-box">
-        <ul class="remarques-list">
-          <li v-for="item in remarques" :key="item._id" class="remarque-point">
-            <span class="bullet-dash">–</span>
-            <span class="remarque-text">{{ getRemarqueText(item) }}</span>
-          </li>
-        </ul>
+
+      <!-- En bas : Compte à rebours fermeture définitive du siteweb de 5j -->
+      <div class="closure-countdown-footer">
+        <div class="countdown-banner closure-banner">
+          <span v-if="isSiteClosed" class="countdown-text">
+            {{ $t('closure_countdown_ended') }}
+          </span>
+          <div v-else class="countdown-inner-flow">
+            <span class="countdown-prefix">{{ closureCountdownPrefix }}</span>
+            <div class="countdown-digits-cluster">
+              <!-- Jours -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit 
+                  v-for="(d, idx) in closureDayDigits" 
+                  :key="'c-d-' + (closureDayDigits.length - 1 - idx)" 
+                  :value="d"
+                />
+                <span class="countdown-letter">{{ dayUnit }}</span>
+              </span>
+
+              <!-- Heures -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit :value="closureHourDigits[0]" key="c-h-tens" />
+                <RollingDigit :value="closureHourDigits[1]" key="c-h-ones" />
+                <span class="countdown-letter">h</span>
+              </span>
+
+              <!-- Minutes -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit :value="closureMinDigits[0]" key="c-m-tens" />
+                <RollingDigit :value="closureMinDigits[1]" key="c-m-ones" />
+                <span class="countdown-letter">m</span>
+              </span>
+
+              <!-- Secondes -->
+              <span class="countdown-unit-cluster">
+                <RollingDigit :value="closureSecDigits[0]" key="c-s-tens" />
+                <RollingDigit :value="closureSecDigits[1]" key="c-s-ones" />
+                <span class="countdown-letter">s</span>
+              </span>
+            </div>
+            <span v-if="closureCountdownSuffix" class="countdown-suffix">{{ closureCountdownSuffix }}</span>
+          </div>
+        </div>
       </div>
-    </section>
+    </template>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRoute } from 'vue-router';
 import { ProductService } from '@/service/ProductService';
 import LangSwitcher from '@/components/LangSwitcher.vue';
 import RollingDigit from '@/components/RollingDigit.vue';
 import logoSvg from '@/assets/logo.svg';
 
 const { locale, t } = useI18n();
+const route = useRoute();
 
 // Compte à rebours fin de collecte : Mercredi 18 novembre 2026 à 18h00 (Madagascar UTC+3)
 const TARGET_END_DATE = new Date('2026-11-18T18:00:00+03:00').getTime();
 const isCountdownEnded = ref(false);
+
+// Mode fin de collecte (actif quand le compte à rebours est expiré ou via ?ended=true pour prévisualisation)
+const isCampaignEnded = computed(() => {
+  return isCountdownEnded.value || route?.query?.ended === 'true' || route?.query?.preview === 'ended';
+});
 const daysLeft = ref(0);
 const hoursLeft = ref(0);
 const minutesLeft = ref(0);
@@ -275,10 +374,51 @@ const countdownSuffix = computed(() => {
   return parts[1] || '';
 });
 
+// Compte à rebours fermeture définitive du site : 5 jours après la fin de collecte (23 novembre 2026 à 18h00 UTC+3)
+const CLOSURE_DURATION_MS = 5 * 24 * 60 * 60 * 1000;
+const TARGET_CLOSURE_DATE = TARGET_END_DATE + CLOSURE_DURATION_MS;
+const isSiteClosed = ref(false);
+const closureDaysLeft = ref(0);
+const closureHoursLeft = ref(0);
+const closureMinutesLeft = ref(0);
+const closureSecondsLeft = ref(0);
+
+const closureDayDigits = computed(() => {
+  return String(closureDaysLeft.value).split('').map(Number);
+});
+
+const closureHourDigits = computed(() => {
+  const h = Math.max(0, closureHoursLeft.value);
+  return [Math.floor(h / 10), h % 10];
+});
+
+const closureMinDigits = computed(() => {
+  const m = Math.max(0, closureMinutesLeft.value);
+  return [Math.floor(m / 10), m % 10];
+});
+
+const closureSecDigits = computed(() => {
+  const s = Math.max(0, closureSecondsLeft.value);
+  return [Math.floor(s / 10), s % 10];
+});
+
+const closureCountdownPrefix = computed(() => {
+  const raw = t('closure_countdown_text', { time: '___TIME___' });
+  const parts = raw.split('___TIME___');
+  return parts[0] || '';
+});
+
+const closureCountdownSuffix = computed(() => {
+  const raw = t('closure_countdown_text', { time: '___TIME___' });
+  const parts = raw.split('___TIME___');
+  return parts[1] || '';
+});
+
 let countdownInterval = null;
 
 const updateCountdown = () => {
-  const diff = TARGET_END_DATE - Date.now();
+  const now = Date.now();
+  const diff = TARGET_END_DATE - now;
 
   if (diff <= 0) {
     isCountdownEnded.value = true;
@@ -286,14 +426,36 @@ const updateCountdown = () => {
     hoursLeft.value = 0;
     minutesLeft.value = 0;
     secondsLeft.value = 0;
-    return;
+  } else {
+    isCountdownEnded.value = false;
+    daysLeft.value = Math.floor(diff / (1000 * 60 * 60 * 24));
+    hoursLeft.value = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    minutesLeft.value = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    secondsLeft.value = Math.floor((diff % (1000 * 60)) / 1000);
   }
 
-  isCountdownEnded.value = false;
-  daysLeft.value = Math.floor(diff / (1000 * 60 * 60 * 24));
-  hoursLeft.value = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  minutesLeft.value = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  secondsLeft.value = Math.floor((diff % (1000 * 60)) / 1000);
+  // Calcul du compte à rebours de fermeture définitive (5 jours)
+  let diffClosure = 0;
+  if (now >= TARGET_END_DATE) {
+    diffClosure = TARGET_CLOSURE_DATE - now;
+  } else {
+    // Si en mode aperçu / preview avant l'échéance officielle, simuler 5 jours
+    diffClosure = CLOSURE_DURATION_MS - (now % (1000 * 60 * 60 * 24));
+  }
+
+  if (diffClosure <= 0) {
+    isSiteClosed.value = true;
+    closureDaysLeft.value = 0;
+    closureHoursLeft.value = 0;
+    closureMinutesLeft.value = 0;
+    closureSecondsLeft.value = 0;
+  } else {
+    isSiteClosed.value = false;
+    closureDaysLeft.value = Math.floor(diffClosure / (1000 * 60 * 60 * 24));
+    closureHoursLeft.value = Math.floor((diffClosure % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    closureMinutesLeft.value = Math.floor((diffClosure % (1000 * 60)) / (1000 * 60));
+    closureSecondsLeft.value = Math.floor((diffClosure % (1000 * 60)) / 1000);
+  }
 };
 
 // Variables du template
@@ -336,6 +498,32 @@ const sommeDisplaySlots = computed(() => {
     }
   }
   return slots;
+});
+
+// Liste de tous les participants pour les lingots dorés (Page de remerciement)
+const participantNames = computed(() => {
+  if (!products.value || products.value.length === 0) return [];
+  const seen = new Set();
+  const list = [];
+  for (const item of products.value) {
+    const nom = (item.nom || '').trim().toUpperCase();
+    const prenom = (item.prenom || '').trim();
+    let name = '';
+    if (nom && prenom) {
+      name = `${nom} ${prenom}`;
+    } else if (nom) {
+      name = nom;
+    } else if (prenom) {
+      name = prenom;
+    } else {
+      name = t('anonymous_firstname') || 'Anonyme';
+    }
+    if (!seen.has(name)) {
+      seen.add(name);
+      list.push(name);
+    }
+  }
+  return list;
 });
 
 // Remarques dynamiques
@@ -1251,6 +1439,208 @@ body.dark .loading-spinner-icon,
 }
 
 /* ======================================================== */
+/* PAGE DE REMERCIEMENT (Quand le compte à rebours est fini) */
+/* ======================================================== */
+.thanks-hero-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.25rem 0 0.45rem;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.thanks-total-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888888;
+  margin-bottom: 0.2rem;
+}
+
+.thanks-total-amount {
+  font-size: clamp(2.4rem, 5.5vw, 3.4rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thanks-phrase-text {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  font-weight: 700;
+  color: #111111;
+  margin: 0;
+  line-height: 1.35;
+  max-width: 820px;
+}
+
+html.dark .thanks-phrase-text,
+body.dark .thanks-phrase-text,
+.dark .thanks-phrase-text {
+  color: #f3f4f6;
+}
+
+/* Zone scrollable contenant la grille des participants */
+.thanks-names-wrapper {
+  flex: 1 1 0;
+  min-height: 140px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.5rem 0.25rem 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(180, 136, 45, 0.45) transparent;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 24px), transparent 100%);
+}
+
+.thanks-names-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.thanks-names-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thanks-names-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(180, 136, 45, 0.45);
+  border-radius: 9999px;
+}
+
+/* Tableau à double colonne sans titre de colonne */
+.thanks-names-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Lingot doré ultra-réaliste */
+.ultra-gold-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 22px;
+  border-radius: 12px;
+  overflow: hidden; /* Garde le flash à l'intérieur du bloc */
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 56px;
+  text-align: center;
+
+  /* 1. Texture dorée brossée + Dégradé métallique riche */
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.06) 0px,
+      rgba(255, 255, 255, 0.06) 1px,
+      transparent 1px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.05) 3px,
+      rgba(0, 0, 0, 0.05) 4px
+    ),
+    linear-gradient(
+      135deg,
+      #8a6421 0%,
+      #d4af37 22%,
+      #fef1c9 45%,
+      #d4af37 55%,
+      #9b7226 78%,
+      #f7e094 100%
+    );
+
+  /* Bordure biseautée et ombres pour l'effet lingot 3D */
+  border: 1px solid #fbe6a2;
+  box-shadow: 
+    inset 0 2px 3px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 4px rgba(110, 75, 15, 0.7),
+    0 10px 24px -5px rgba(180, 136, 45, 0.5),
+    0 4px 10px rgba(0, 0, 0, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ultra-gold-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 0 2px 3px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 4px rgba(110, 75, 15, 0.8),
+    0 14px 28px -4px rgba(180, 136, 45, 0.65),
+    0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* 2. Texte avec effet gravé dans l'or */
+.gold-text {
+  position: relative;
+  z-index: 2;
+  font-family: 'Cinzel', 'Georgia', serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #3d2806;
+  text-shadow: 
+    0 1px 1px rgba(255, 255, 255, 0.75),
+    0 -1px 1px rgba(0, 0, 0, 0.3);
+  line-height: 1.25;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* 3. Animation de flash lumineux traversant la largeur */
+.ultra-gold-box::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 65%;
+  height: 100%;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 100%
+  );
+  transform: skewX(-25deg);
+  animation: gold-flash 4.5s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes gold-flash {
+  0% {
+    left: -150%;
+  }
+  35% {
+    left: 160%; /* Traverse le div en ~1.5s */
+  }
+  100% {
+    left: 160%; /* Pause avant le prochain reflet */
+  }
+}
+
+/* Compte à rebours fermeture définitive en bas */
+.closure-countdown-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-shrink: 0;
+  padding: 0.35rem 0 0.15rem;
+}
+
+.closure-banner {
+  border-radius: 9px !important;
+}
+
+/* ======================================================== */
 /* RESPONSIVE : TABLETTE (641px - 1024px)                  */
 /* ======================================================== */
 @media (min-width: 641px) and (max-width: 1024px) {
@@ -1457,6 +1847,51 @@ body.dark .loading-spinner-icon,
   .bullet-dot {
     font-size: 0.84rem;
     line-height: 1.5;
+  }
+
+  /* Page de Remerciement sur Mobile */
+  .thanks-hero-center {
+    padding: 0.15rem 0 0.3rem;
+  }
+
+  .thanks-total-amount {
+    font-size: clamp(1.8rem, 7.5vw, 2.35rem);
+    margin-bottom: 0.3rem;
+  }
+
+  .thanks-phrase-text {
+    font-size: 0.88rem;
+    line-height: 1.35;
+    padding: 0 0.2rem;
+  }
+
+  .thanks-names-wrapper {
+    padding: 0.35rem 0.1rem 0.5rem;
+  }
+
+  .thanks-names-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem 0.5rem;
+  }
+
+  .ultra-gold-box {
+    padding: 9px 8px;
+    min-height: 44px;
+    border-radius: 9px;
+  }
+
+  .gold-text {
+    font-size: 0.76rem;
+    letter-spacing: 1px;
+    line-height: 1.2;
+  }
+
+  .closure-countdown-footer {
+    padding: 0.2rem 0 0.1rem;
+  }
+
+  .closure-banner {
+    border-radius: 8px !important;
   }
 }
 </style>

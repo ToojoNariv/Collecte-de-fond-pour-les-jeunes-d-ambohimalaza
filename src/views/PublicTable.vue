@@ -1447,12 +1447,15 @@ body.dark .loading-spinner-icon,
 /* ======================================================== */
 .hero-top-header-ended {
   min-height: auto;
-  padding: 0.15rem 0 0.1rem;
+  padding: 0.25rem 0 0.15rem;
   margin-bottom: 0;
 }
 
 .header-logo-ended {
-  height: clamp(52px, 7vh, 72px) !important;
+  height: clamp(90px, 11vh, 125px) !important;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
 }
 
 .thanks-hero-center {
@@ -1461,37 +1464,37 @@ body.dark .loading-spinner-icon,
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 0.15rem 0 0.25rem;
+  padding: 0.2rem 0 0.3rem;
   flex-shrink: 0;
   width: 100%;
 }
 
 .thanks-total-label {
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #888888;
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.15rem;
 }
 
 .thanks-total-amount {
-  font-size: clamp(2rem, 4.2vw, 2.75rem);
+  font-size: clamp(2.75rem, 5.8vw, 3.8rem);
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .thanks-phrase-text {
-  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  font-size: clamp(1rem, 2vw, 1.25rem);
   font-weight: 700;
   color: #111111;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.35;
   max-width: 820px;
 }
 
@@ -1509,7 +1512,7 @@ body.dark .thanks-phrase-text,
   overflow-x: hidden;
   padding: 0.35rem 0.25rem 0.5rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(200, 160, 60, 0.45) transparent;
+  scrollbar-color: rgba(180, 140, 50, 0.45) transparent;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 calc(100% - 20px), transparent 100%);
 }
@@ -1523,7 +1526,7 @@ body.dark .thanks-phrase-text,
 }
 
 .thanks-names-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(200, 160, 60, 0.45);
+  background: rgba(180, 140, 50, 0.45);
   border-radius: 9999px;
 }
 
@@ -1536,114 +1539,143 @@ body.dark .thanks-phrase-text,
   box-sizing: border-box;
 }
 
-/* Lingot d'or ultra-réaliste (texture or brossé satiné 24k) */
+/* Lingot d'or patiné / légèrement usé ultra-réaliste */
 .ultra-gold-box {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 16px;
+  padding: 11px 16px;
   border-radius: 9px;
   overflow: hidden; /* Garde le flash à l'intérieur du bloc */
   box-sizing: border-box;
   width: 100%;
-  min-height: 44px;
+  min-height: 46px;
   text-align: center;
 
-  /* 1. Texture or satiné brossé avec reflet réaliste et dégradé métallique riche */
+  /* 1. Texture or patiné / légèrement usé : micro-rayures d'usure croisées, patine d'âge et dégradé métallique riche */
   background-image: 
-    radial-gradient(ellipse at 50% -15%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 65%),
+    /* Reflet d'ambiance zénithal patiné */
+    radial-gradient(ellipse at 50% -10%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 60%),
+    /* Micro-aspérités et patine d'usure organique */
+    radial-gradient(circle at 18% 78%, rgba(60, 40, 10, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 65% 85%, rgba(60, 40, 10, 0.06) 0%, transparent 40%),
+    /* Micro-rayures d'usure / grain brossé patiné multidirectionnel */
     repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.04) 0px,
-      rgba(255, 255, 255, 0.04) 1px,
+      118deg,
+      rgba(40, 25, 5, 0.045) 0px,
+      rgba(40, 25, 5, 0.045) 1px,
       transparent 1px,
-      transparent 2px
+      transparent 3px,
+      rgba(255, 255, 255, 0.05) 3px,
+      rgba(255, 255, 255, 0.05) 4px,
+      transparent 4px,
+      transparent 7px
     ),
+    repeating-linear-gradient(
+      -62deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 5px,
+      rgba(50, 30, 8, 0.035) 5px,
+      rgba(50, 30, 8, 0.035) 6px,
+      transparent 6px,
+      transparent 10px
+    ),
+    /* Dégradé métallique riche or patiné 24k */
     linear-gradient(
       112deg,
-      #c59b27 0%,
-      #e9c565 16%,
-      #fff4b8 32%,
-      #dfb140 48%,
-      #f7d77b 68%,
-      #c49926 86%,
-      #b88a18 100%
+      #a07821 0%,
+      #c49b35 15%,
+      #e8c460 28%,
+      #fae89c 40%,
+      #d4aa42 52%,
+      #b38627 65%,
+      #eec96a 78%,
+      #c69931 88%,
+      #9a7019 100%
     );
 
-  /* Bordure biseautée dorée et ombrage raffiné sans drop-shadow excessif */
-  border: 1px solid #ebd380;
+  /* Bordure dorée vieillie biseautée et relief 3D réaliste */
+  border: 1px solid #b89138;
   box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.75),
-    inset 0 -1px 2px rgba(120, 80, 15, 0.35),
-    0 2px 5px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.05);
+    inset 0 1px 1px rgba(255, 255, 255, 0.65),
+    inset 0 -1px 2px rgba(80, 52, 10, 0.5),
+    inset 1px 0 1.5px rgba(80, 52, 10, 0.25),
+    inset -1px 0 1.5px rgba(80, 52, 10, 0.25),
+    0 2px 5px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 html.dark .ultra-gold-box,
 body.dark .ultra-gold-box,
 .dark .ultra-gold-box {
-  border-color: #d1a843;
+  border-color: #9e7724;
   box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.5),
-    inset 0 -1px 2px rgba(60, 40, 5, 0.4),
-    0 3px 8px rgba(0, 0, 0, 0.35);
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 2px rgba(45, 28, 5, 0.6),
+    0 3px 8px rgba(0, 0, 0, 0.4);
 }
 
 .ultra-gold-box:hover {
   transform: translateY(-1px);
   box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.85),
-    inset 0 -1px 2px rgba(120, 80, 15, 0.45),
-    0 4px 10px rgba(0, 0, 0, 0.12);
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 2px rgba(80, 52, 10, 0.6),
+    0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* 2. Typographie moderne, nette et lisible (Plus Jakarta Sans au lieu du Cinzel) */
+/* 2. Texte gravé dans l'or (marron très profond presque noir, relief creusé) */
 .gold-text {
   position: relative;
   z-index: 2;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-size: 0.96rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #382405;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: #1a0f02; /* Marron très profond presque noir */
+  text-shadow: 
+    0 -1px 0 rgba(0, 0, 0, 0.85),
+    0 1px 1px rgba(255, 248, 210, 0.75),
+    -1px 0 1px rgba(0, 0, 0, 0.4);
   line-height: 1.25;
   text-align: center;
   word-break: break-word;
 }
 
-/* 3. Animation de flash lumineux délicat et non agressif */
+/* 3. Animation de flash lumineux délicat */
 .ultra-gold-box::after {
   content: "";
   position: absolute;
   top: 0;
-  left: -120%;
-  width: 30%;
+  left: -130%;
+  width: 32%;
   height: 100%;
   z-index: 1;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, 0.22) 50%,
+    rgba(255, 255, 255, 0.18) 50%,
     transparent 100%
   );
-  transform: skewX(-22deg);
-  animation: gold-flash 7.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  transform: skewX(-20deg);
+  animation: gold-flash 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
 }
 
 @keyframes gold-flash {
   0% {
-    left: -120%;
+    left: -130%;
   }
   24% {
-    left: 150%; /* Traverse délicatement le lingot */
+    left: 150%;
   }
   100% {
-    left: 150%; /* Pause longue avant le prochain reflet */
+    left: 150%;
   }
 }
 
@@ -1676,6 +1708,14 @@ body.dark .ultra-gold-box,
     max-width: 100%;
     object-fit: contain;
     object-position: left center;
+  }
+
+  .header-logo-ended {
+    height: clamp(100px, 13vw, 135px) !important;
+  }
+
+  .thanks-total-amount {
+    font-size: clamp(2.5rem, 5.5vw, 3.4rem);
   }
 
   .stats-controls-side {
@@ -1872,21 +1912,21 @@ body.dark .ultra-gold-box,
 
   /* Page de Remerciement sur Mobile */
   .header-logo-ended {
-    height: clamp(44px, 11vw, 54px) !important;
+    height: clamp(72px, 19vw, 95px) !important;
   }
 
   .thanks-hero-center {
-    padding: 0.1rem 0 0.15rem;
+    padding: 0.1rem 0 0.2rem;
   }
 
   .thanks-total-amount {
-    font-size: clamp(1.7rem, 6.5vw, 2.1rem);
-    margin-bottom: 0.2rem;
+    font-size: clamp(2.1rem, 7.8vw, 2.75rem);
+    margin-bottom: 0.25rem;
   }
 
   .thanks-phrase-text {
-    font-size: 0.85rem;
-    line-height: 1.25;
+    font-size: 0.88rem;
+    line-height: 1.3;
     padding: 0 0.15rem;
   }
 
@@ -1896,18 +1936,18 @@ body.dark .ultra-gold-box,
 
   .thanks-names-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.4rem 0.45rem;
+    gap: 0.45rem 0.45rem;
   }
 
   .ultra-gold-box {
-    padding: 7px 8px;
-    min-height: 38px;
-    border-radius: 7px;
+    padding: 8px 8px;
+    min-height: 40px;
+    border-radius: 8px;
   }
 
   .gold-text {
-    font-size: 0.72rem;
-    letter-spacing: 0.02em;
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
     line-height: 1.15;
   }
 

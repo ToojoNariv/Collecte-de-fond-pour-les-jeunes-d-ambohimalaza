@@ -48,7 +48,7 @@ const messages = {
         countdown_ended: "Collecte terminée",
         remarque_transfert_rappel: "Il s'agit d'un transfert au 034 04 526 84, merci beaucoup",
         thanks_title: "Remerciements",
-        thanks_phrase: "Un grand merci pour votre participation, tout particulièrement à :",
+        thanks_phrase: "Un grand merci pour votre soutien, tout particulièrement à:",
         closure_countdown_text: "Fermeture définitive du site dans {time}",
         closure_countdown_ended: "Le site est désormais définitivement fermé. Merci à tous !"
     },
@@ -99,7 +99,7 @@ const messages = {
         countdown_ended: "Campaign ended",
         remarque_transfert_rappel: "It is a transfer to 034 04 256 84,thank you so much",
         thanks_title: "Heartfelt Thanks",
-        thanks_phrase: "A heartfelt thank you for your participation, especially to:",
+        thanks_phrase: "A heartfelt thank you for your support, especially to:",
         closure_countdown_text: "Final website closure in {time}",
         closure_countdown_ended: "The website is now officially closed. Thank you all!"
     },
@@ -150,7 +150,7 @@ const messages = {
         countdown_ended: "Nifarana ny fanangonam-bola",
         remarque_transfert_rappel: "Tsahivina fa transfert amin'ny 034 04 526 84  tompoko",
         thanks_title: "Fisaorana Feno Fitiavana",
-        thanks_phrase: "Misaotra indrindra tamin'ny fandraisana anjara, indrindra ho an'ireto :",
+        thanks_phrase: "Misaotra betsaka tamin'ny fanohanana, indrindra ho anareo:",
         closure_countdown_text: "Hikatona tanteraka ny tranokala afaka {time}",
         closure_countdown_ended: "Nikatona tanteraka ny tranokala. Misaotra anareo rehetra tompoko !"
     }
